@@ -6,7 +6,7 @@
 
 const size_t BUFFER_SIZE = 1024 * 1024; // 1MB buffer
 
-// This code is (inspired) from fast-int.cpp by Jonathan Hudson (2024) CPSC 457. 
+// This code is (inspired) from fast-int.cpp by Pavol Federl (2020). 
 unsigned char buffer[BUFFER_SIZE]; // Buffer for reading from stdin
 int buff_size = 0; // Number of bytes currently in the buffer
 int buff_pos = 0; // Current position in the buffer
