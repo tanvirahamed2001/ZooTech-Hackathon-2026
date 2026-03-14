@@ -89,7 +89,9 @@ src/
   contexts/ThemeContext.tsx        Dark/light mode (localStorage)
   components/landing/              LandingPage
   components/quiz/                 QuizContainer, QuizIntro, Question, ProgressBar
-  components/results/              ResultsPage, ResultsChart, ResultsExplanation
+  utils/aiPrompts.ts               AI prompt generation (pure function)
+  utils/__tests__/aiPrompts.test.ts  Vitest tests for prompt generation
+  components/results/              ResultsPage, ResultsChart, ResultsExplanation, AIPromptsCard
   components/shared/               ThemeToggle
 ```
 
@@ -109,3 +111,17 @@ src/
 - Removed routes `/my-results`, `/u/:id`, `/analytics` from `App.tsx`
 - Uninstalled `@supabase/supabase-js`, `ua-parser-js`, `@types/ua-parser-js`
 - App is now fully stateless — no network calls, no env vars required
+
+### 2026-03-14 — Milestone 5: AI Prompts feature
+- Created `src/utils/aiPrompts.ts` — pure function `generateAIPrompts(scores)` returns personalised system + conversation prompts
+- Templates for all 4 pure styles, all two-style combinations, and 3+ multimodal
+- Style instruction bank per VARK dimension (communication, structure, check-in)
+- Built `AIPromptsCard` component with labelled System Prompt and Conversation Prompt blocks
+- Copy button with "Copied!" feedback state (2s) on each block
+- Clipboard API with `execCommand` fallback
+- Explanatory text above each prompt block
+- Full dark mode styling
+- Inserted in `ResultsPage` between `ResultsExplanation` and Retake Quiz card
+- Renders on both `/results` and `/r/:hash`
+- 37 Vitest unit tests for `generateAIPrompts` — all passing
+- Installed Vitest as devDependency; added `test` and `test:watch` npm scripts

@@ -29,6 +29,11 @@ export type VarkScores = {
   K: number;
 };
 
+export type AIPrompts = {
+  systemPrompt: string;
+  conversationPrompt: string;
+};
+
 export type QuizContextType = {
   quizState: QuizState;
   startQuiz: () => void;

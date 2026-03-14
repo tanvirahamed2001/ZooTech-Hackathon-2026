@@ -1,9 +1,4 @@
-import type { VarkScores } from '../types';
-
-export type AIPrompts = {
-  systemPrompt: string;
-  conversationPrompt: string;
-};
+import type { VarkScores, AIPrompts } from '../types';
 
 type VarkStyle = 'V' | 'A' | 'R' | 'K';
 
