@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Question as QuestionType } from '../../types';
 import { useQuiz } from '../../contexts/QuizContext';
@@ -22,54 +22,54 @@ const Question: React.FC<QuestionProps> = ({ question }) => {
 
   const hasSelectedOptions = quizState.answers[question.id] && quizState.answers[question.id].length > 0;
 
-  useEffect(() => {
-    // Scroll to top when question changes
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  const callbackRefs = useRef({ goToNextQuestion, goToPreviousQuestion, selectOption, unselectOption, isOptionSelected, skipQuestion });
+  callbackRefs.current = { goToNextQuestion, goToPreviousQuestion, selectOption, unselectOption, isOptionSelected, skipQuestion };
 
-    // Keyboard shortcuts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [question.id]);
+
+  useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
       const key = e.key.toLowerCase();
-      // Prevent shortcuts when typing in input fields
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
         return;
       }
       
-      // Number keys 1-4 for options
+      const { goToNextQuestion: next, goToPreviousQuestion: prev, selectOption: select, unselectOption: unselect, isOptionSelected: isSelected, skipQuestion: skip } = callbackRefs.current;
+
       if (['1', '2', '3', '4'].includes(key)) {
         const index = parseInt(key) - 1;
         const option = question.options[index];
         if (option) {
-          if (isOptionSelected(question.id, option.id)) {
-            unselectOption(question.id, option.id);
+          if (isSelected(question.id, option.id)) {
+            unselect(question.id, option.id);
           } else {
-            selectOption(question.id, option.id);
+            select(question.id, option.id);
           }
         }
       }
       
-      // Enter to proceed
       if (key === 'enter') {
-        goToNextQuestion();
+        next();
       }
       
-      // Space to skip
       if (key === ' ') {
         e.preventDefault();
-        skipQuestion();
+        skip();
       }
       
-      // Left/right arrows for navigation
       if (key === 'arrowleft') {
-        goToPreviousQuestion();
+        prev();
       }
       if (key === 'arrowright') {
-        goToNextQuestion();
+        next();
       }
     };
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [question.id, goToNextQuestion, goToPreviousQuestion, selectOption, unselectOption, isOptionSelected, skipQuestion]);
+  }, [question.id, question.options]);
 
   const getSimplifiedExplanation = (scenario: string) => {
     const explanations: Record<number, string> = {
@@ -140,7 +140,7 @@ const Question: React.FC<QuestionProps> = ({ question }) => {
               transition={{ duration: 0.3, delay: 0.2 + (index * 0.1) }}
             >
               <div className="flex items-start">
-                <div className={`w-6 h-6 mt-0.5 rounded-md border-2 flex items-center justify-center flex-shrink-0 mr-3 ${isOptionSelected(question.id, option.id) ? 'bg-violet-500 border-violet-500' : 'border-gray-300'}`}>
+                <div className={`w-6 h-6 mt-0.5 rounded-md border-2 flex items-center justify-center flex-shrink-0 mr-3 ${isOptionSelected(question.id, option.id) ? 'bg-violet-500 border-violet-500' : 'border-gray-300 dark:border-gray-500'}`}>
                   {isOptionSelected(question.id, option.id) && <Check className="w-4 h-4 text-white" strokeWidth={2.75} />}
                 </div>
                 <div className="flex-1">
@@ -163,7 +163,7 @@ const Question: React.FC<QuestionProps> = ({ question }) => {
             whileHover={quizState.currentQuestionIndex !== 0 ? { scale: 1.02 } : {}}
             whileTap={quizState.currentQuestionIndex !== 0 ? { scale: 0.98 } : {}}
           >
-            <ChevronLeft className="w-4 h-4 mr-1 text-[#f5f5f7]" strokeWidth={2.5} />
+            <ChevronLeft className="w-4 h-4 mr-1" strokeWidth={2.5} />
             Previous
           </motion.button>
           
@@ -177,7 +177,7 @@ const Question: React.FC<QuestionProps> = ({ question }) => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              <SkipForward className="w-4 h-4 mr-1 text-[#f5f5f7]" strokeWidth={2.5} />
+              <SkipForward className="w-4 h-4 mr-1" strokeWidth={2.5} />
               Skip (Space)
             </motion.button>
             
@@ -191,7 +191,7 @@ const Question: React.FC<QuestionProps> = ({ question }) => {
               whileTap={{ scale: 0.98 }}
             >
               {quizState.currentQuestionIndex === questions.length - 1 ? 'Finish' : 'Next'} (Enter)
-              <ChevronRight className="w-4 h-4 ml-1 text-[#f5f5f7]" strokeWidth={2.5} />
+              <ChevronRight className="w-4 h-4 ml-1" strokeWidth={2.5} />
             </motion.button>
           </div>
         </div>

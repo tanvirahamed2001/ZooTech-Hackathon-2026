@@ -111,7 +111,14 @@ Remove all code that depends on Supabase, email delivery, or server-side persist
 - [x] Add shareable results link card at bottom of results page — `/r/:hash` URL with copy-to-clipboard [2026-03-14]
 - [x] Codebase audit — remove all non-production scaffolding and dead files [2026-03-14]
 - [ ] Add Vitest + React Testing Library — unit tests for `calculateScores` and `generateAIPrompts`
-- [ ] Add proper 404 page for unmatched routes
+- [x] Add proper 404 page for unmatched routes [2026-03-14]
 - [ ] Add `<meta>` Open Graph tags to `index.html` for better social sharing previews on the `/r/:hash` URL
 - [ ] Audit and remove all `console.log` statements from production code
 - [ ] Add E2E test for the full quiz → results → copy prompt flow with Playwright (good-to-have)
+- [x] Fix dark mode flickering during quiz navigation (unstable useEffect deps) [2026-03-14]
+- [x] Fix scroll jump on answer selection (useEffect re-firing window.scrollTo) [2026-03-14]
+- [x] Add missing dark: variants across QuizIntro, QuizContainer, ResultsExplanation, ResultsChart [2026-03-14]
+- [x] Guard /results route against direct access without quiz completion [2026-03-14]
+- [x] Fix all-zero scores edge case in ResultsPage (dominantStyles) [2026-03-14]
+- [x] Wrap QuizContext functions in useCallback for stable references [2026-03-14]
+- [x] Create BRANDING.md — full brand style guide for designer handoff [2026-03-14]

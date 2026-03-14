@@ -25,34 +25,34 @@ const QuizIntro: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h3 className="text-xl font-semibold text-center text-gray-800 mb-8">
+        <h3 className="text-xl font-semibold text-center text-gray-800 dark:text-gray-100 mb-8">
           Let's Discover Your Learning Style!
         </h3>
 
         <div className="space-y-5 mb-10">
           <div className="flex items-start">
             <CheckCircle className="w-5 h-5 text-violet-500 mt-1 mr-3 flex-shrink-0" strokeWidth={2.5} />
-            <p className="text-gray-600">Select <strong className="text-gray-800">all answers</strong> that apply to you in each scenario</p>
+            <p className="text-gray-600 dark:text-gray-300">Select <strong className="text-gray-800 dark:text-gray-100">all answers</strong> that apply to you in each scenario</p>
           </div>
           <div className="flex items-start">
             <CheckCircle className="w-5 h-5 text-violet-500 mt-1 mr-3 flex-shrink-0" strokeWidth={2.5} />
-            <p className="text-gray-600">Skip questions that don't resonate with you</p>
+            <p className="text-gray-600 dark:text-gray-300">Skip questions that don't resonate with you</p>
           </div>
           <div className="flex items-start">
             <CheckCircle className="w-5 h-5 text-violet-500 mt-1 mr-3 flex-shrink-0" strokeWidth={2.5} />
-            <p className="text-gray-600">Be honest - this isn't a test, it's about understanding your natural preferences</p>
+            <p className="text-gray-600 dark:text-gray-300">Be honest - this isn't a test, it's about understanding your natural preferences</p>
           </div>
           <div className="flex items-start">
             <CheckCircle className="w-5 h-5 text-violet-500 mt-1 mr-3 flex-shrink-0" strokeWidth={2.5} />
-            <p className="text-gray-600">Takes about 3 minutes to complete all 13 questions</p>
+            <p className="text-gray-600 dark:text-gray-300">Takes about 3 minutes to complete all 13 questions</p>
           </div>
         </div>
 
-        <div className="bg-gradient-to-r from-amber-50 to-orange-50 p-5 rounded-xl mb-10 border border-amber-100">
-          <p className="text-amber-900 font-medium italic">
+        <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 p-5 rounded-xl mb-10 border border-amber-100 dark:border-amber-800">
+          <p className="text-amber-900 dark:text-amber-200 font-medium italic">
             "Your brain is unique, like a fingerprint but with more opinions and a weird obsession with cat videos. Let's figure out how it actually works!"
           </p>
-          <p className="text-right text-amber-700 text-sm mt-2">— RayRayRay</p>
+          <p className="text-right text-amber-700 dark:text-amber-400 text-sm mt-2">— RayRayRay</p>
         </div>
         
         <motion.button

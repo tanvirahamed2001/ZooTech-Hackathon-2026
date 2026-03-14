@@ -73,11 +73,11 @@ const ResultsExplanation: React.FC<ResultsExplanationProps> = ({ dominantStyles 
         <p className="text-gray-600 dark:text-gray-300">Complete more questions to see your results!</p>
       ) : dominantStyles.length > 2 ? (
         <div className="mb-6">
-          <p className="text-gray-600 mb-4">
-            You have a <strong className="text-gray-800">multimodal learning style</strong> with strengths across several categories. This means you're adaptable and can learn effectively through different methods.
+          <p className="text-gray-600 dark:text-gray-300 mb-4">
+            You have a <strong className="text-gray-800 dark:text-gray-100">multimodal learning style</strong> with strengths across several categories. This means you're adaptable and can learn effectively through different methods.
           </p>
-          <p className="text-gray-600">
-            RayRayRay says: <span className="italic text-violet-700">"Your brain is like a learning Swiss Army knife – ready for whatever information comes your way. Lucky you!"</span>
+          <p className="text-gray-600 dark:text-gray-300">
+            RayRayRay says: <span className="italic text-violet-700 dark:text-violet-400">"Your brain is like a learning Swiss Army knife – ready for whatever information comes your way. Lucky you!"</span>
           </p>
         </div>
       ) : (
@@ -85,13 +85,13 @@ const ResultsExplanation: React.FC<ResultsExplanationProps> = ({ dominantStyles 
           {dominantStyles.map(style => {
             const explanation = getExplanation(style);
             return (
-              <div key={style} className="border-b border-gray-200 pb-6 last:border-b-0 last:pb-0">
-                <h4 className="text-lg font-semibold text-gray-800 mb-2">{explanation.title}</h4>
-                <p className="text-gray-600 mb-4">{explanation.description}</p>
+              <div key={style} className="border-b border-gray-200 dark:border-gray-700 pb-6 last:border-b-0 last:pb-0">
+                <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">{explanation.title}</h4>
+                <p className="text-gray-600 dark:text-gray-300 mb-4">{explanation.description}</p>
                 
                 <div>
-                  <h5 className="font-medium text-gray-800 mb-2">Learning Tips:</h5>
-                  <ul className="list-disc pl-5 space-y-1 text-gray-600">
+                  <h5 className="font-medium text-gray-800 dark:text-gray-100 mb-2">Learning Tips:</h5>
+                  <ul className="list-disc pl-5 space-y-1 text-gray-600 dark:text-gray-300">
                     {explanation.tips.map((tip, index) => (
                       <li key={index}>{tip}</li>
                     ))}
@@ -103,11 +103,11 @@ const ResultsExplanation: React.FC<ResultsExplanationProps> = ({ dominantStyles 
         </div>
       )}
       
-      <div className="bg-gradient-to-r from-violet-50 to-indigo-50 p-5 rounded-xl mt-6 border border-violet-100">
-        <p className="text-violet-900 font-medium italic">
+      <div className="bg-gradient-to-r from-violet-50 to-indigo-50 dark:from-violet-900/30 dark:to-indigo-900/30 p-5 rounded-xl mt-6 border border-violet-100 dark:border-violet-800">
+        <p className="text-violet-900 dark:text-violet-200 font-medium italic">
           "Knowing your learning style is like having the cheat code for your brain. Now you can stop forcing yourself to learn like everyone else and start playing to your strengths!"
         </p>
-        <p className="text-right text-violet-600 text-sm mt-2">— RayRayRay</p>
+        <p className="text-right text-violet-600 dark:text-violet-400 text-sm mt-2">— RayRayRay</p>
       </div>
     </div>
   );
