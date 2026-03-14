@@ -14,10 +14,10 @@ const QuizContainer: React.FC = () => {
     return (
       <div className="min-h-screen py-12 px-4 flex items-center justify-center">
         <div className="max-w-md text-center px-4 card">
-          <h2 className="text-xl font-semibold text-gray-800 mb-2">No questionnaire loaded</h2>
-          <p className="text-gray-600 text-sm">
-            Add questions to <code className="bg-gray-100 px-1.5 py-0.5 rounded text-violet-600">src/data/questions.ts</code> or import from{' '}
-            <code className="bg-gray-100 px-1.5 py-0.5 rounded text-violet-600">src/data/questionnaires/</code> to get started.
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2">No questionnaire loaded</h2>
+          <p className="text-gray-600 dark:text-gray-300 text-sm">
+            Add questions to <code className="bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded text-violet-600 dark:text-violet-400">src/data/questions.ts</code> or import from{' '}
+            <code className="bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded text-violet-600 dark:text-violet-400">src/data/questionnaires/</code> to get started.
           </p>
         </div>
       </div>

@@ -10,7 +10,7 @@ import type { VarkScores } from '../../types';
 import ThemeToggle from '../shared/ThemeToggle';
 
 const ResultsPage: React.FC = () => {
-  const { calculateScores, resetQuiz } = useQuiz();
+  const { quizState, calculateScores, resetQuiz } = useQuiz();
   const [scores, setScores] = useState<VarkScores>({ V: 0, A: 0, R: 0, K: 0 });
   const [resultsUrl, setResultsUrl] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -42,6 +42,11 @@ const ResultsPage: React.FC = () => {
         }
       } else {
         currentScores = calculateScores();
+        const hasAnswers = Object.keys(quizState.answers).length > 0;
+        if (!hasAnswers) {
+          navigate('/');
+          return;
+        }
       }
 
       setScores(currentScores);
@@ -55,7 +60,7 @@ const ResultsPage: React.FC = () => {
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [hash, calculateScores, navigate]);
+  }, [hash, calculateScores, navigate, quizState.answers]);
 
   const copyToClipboard = async () => {
     try {
@@ -86,9 +91,9 @@ const ResultsPage: React.FC = () => {
   };
 
   const maxScore = Math.max(scores.V, scores.A, scores.R, scores.K);
-  const dominantStyles = Object.entries(scores)
-    .filter(([_, value]) => value === maxScore)
-    .map(([key]) => key);
+  const dominantStyles = maxScore > 0
+    ? Object.entries(scores).filter(([_, value]) => value === maxScore).map(([key]) => key)
+    : [];
 
   const getFullStyleName = (code: string): string => {
     switch (code) {

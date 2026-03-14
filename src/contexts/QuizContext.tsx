@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { QuizContextType, QuizState, VarkScores, UserIntent } from '../types';
 import { questions } from '../data/questions';
@@ -33,6 +33,7 @@ export const QuizProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
 
   const navigate = useNavigate();
+  const prevCompletedRef = useRef(quizState.isCompleted);
 
   useEffect(() => {
     try {
@@ -43,9 +44,10 @@ export const QuizProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [quizState]);
 
   useEffect(() => {
-    if (quizState.isCompleted) {
+    if (quizState.isCompleted && !prevCompletedRef.current) {
       navigate('/results');
     }
+    prevCompletedRef.current = quizState.isCompleted;
   }, [quizState.isCompleted, navigate]);
 
   const startQuiz = useCallback(() => {
