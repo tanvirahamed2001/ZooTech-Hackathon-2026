@@ -9,8 +9,8 @@ import type { VarkScores } from '../../types';
 import ThemeToggle from '../shared/ThemeToggle';
 
 const ResultsPage: React.FC = () => {
-  const { calculateScores, resetQuiz, quizState } = useQuiz();
-  const [scores, setScores] = useState<VarkScores>(() => calculateScores());
+  const { calculateScores, resetQuiz } = useQuiz();
+  const [scores, setScores] = useState<VarkScores>({ V: 0, A: 0, R: 0, K: 0 });
   const [resultsUrl, setResultsUrl] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [copySuccess, setCopySuccess] = useState<boolean>(false);
@@ -18,7 +18,9 @@ const ResultsPage: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const initializeScores = () => {
+    const timer = setTimeout(() => {
+      let currentScores: VarkScores;
+
       if (hash) {
         try {
           const decodedScores = atob(hash);
@@ -28,26 +30,31 @@ const ResultsPage: React.FC = () => {
             !isNaN(V) && !isNaN(A) && !isNaN(R) && !isNaN(K) &&
             [V, A, R, K].every(score => score >= 0 && score <= 13)
           ) {
-            setScores({ V, A, R, K });
+            currentScores = { V, A, R, K };
           } else {
             navigate('/');
+            return;
           }
         } catch {
           navigate('/');
+          return;
         }
+      } else {
+        currentScores = calculateScores();
       }
 
-      const scoresString = `${scores.V}-${scores.A}-${scores.R}-${scores.K}`;
+      setScores(currentScores);
+
+      const scoresString = `${currentScores.V}-${currentScores.A}-${currentScores.R}-${currentScores.K}`;
       const newHash = btoa(scoresString).replace(/=/g, '');
       const url = `${window.location.origin}/r/${newHash}`;
       setResultsUrl(url);
 
       setIsLoading(false);
-    };
+    }, 500);
 
-    const timer = setTimeout(initializeScores, 500);
     return () => clearTimeout(timer);
-  }, [hash, scores, navigate, quizState]);
+  }, [hash, calculateScores, navigate]);
 
   const copyToClipboard = async () => {
     try {
