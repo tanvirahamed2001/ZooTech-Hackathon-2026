@@ -1,0 +1,90 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  darkMode: 'class',
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['-apple-system', 'BlinkMacSystemFont', 'SF Pro Text', 'SF Pro Display', 'Inter', 'system-ui', 'sans-serif'],
+      },
+      letterSpacing: {
+        'apple-tight': '-0.025em',
+        'apple-tighter': '-0.04em',
+      },
+      colors: {
+        varkly: {
+          violet: '#8B5CF6',
+          blue: '#3B82F6',
+          emerald: '#10B981',
+          amber: '#F59E0B',
+          dark: '#1e1b4b',
+        },
+        apple: {
+          bg: '#1d1d1f',
+          surface: '#2d2d2f',
+          surfaceElevated: '#38383a',
+          border: '#424245',
+          text: '#f5f5f7',
+          textSecondary: '#a1a1a6',
+          textTertiary: '#6e6e73',
+          accent: '#0071e3',
+          accentHover: '#0077ed',
+        },
+        primary: {
+          50: '#e8f4fd',
+          100: '#cce5fa',
+          200: '#99cbf5',
+          300: '#66b1f0',
+          400: '#3397eb',
+          500: '#0071e3',
+          600: '#005bb5',
+          700: '#004588',
+          800: '#002e5a',
+          900: '#00172d',
+          950: '#000c17',
+        },
+        neutral: {
+          50: '#fafafa',
+          100: '#f5f5f5',
+          200: '#e5e5e5',
+          300: '#d4d4d4',
+          400: '#a3a3a3',
+          500: '#737373',
+          600: '#525252',
+          700: '#404040',
+          800: '#262626',
+          900: '#171717',
+          950: '#0a0a0a',
+        },
+        accent: {
+          50: '#fffbeb',
+          100: '#fef3c7',
+          200: '#fde68a',
+          300: '#fcd34d',
+          400: '#fbbf24',
+          500: '#f59e0b',
+          600: '#d97706',
+          700: '#b45309',
+          800: '#92400e',
+          900: '#78350f',
+          950: '#451a03',
+        },
+      },
+      animation: {
+        'fade-in': 'fadeIn 0.5s ease-out',
+        'slide-up': 'slideUp 0.5s ease-out',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        slideUp: {
+          '0%': { transform: 'translateY(10px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+      },
+    },
+  },
+  plugins: [],
+};
