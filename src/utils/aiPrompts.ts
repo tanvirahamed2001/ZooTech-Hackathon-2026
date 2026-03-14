@@ -72,15 +72,15 @@ function buildSystemPrompt(scores: VarkScores): string {
   const scoreString = formatScores(scores);
 
   if (dominant.length >= 3) {
-    return buildMultimodalThreePlusSystem(scores, dominant, scoreString);
+    return buildMultimodalThreePlusSystem(dominant, scoreString);
   }
   if (dominant.length === 2) {
-    return buildDualStyleSystem(scores, dominant, scoreString);
+    return buildDualStyleSystem(dominant, scoreString);
   }
-  return buildSingleStyleSystem(scores, dominant[0], scoreString);
+  return buildSingleStyleSystem(dominant[0], scoreString);
 }
 
-function buildSingleStyleSystem(scores: VarkScores, style: VarkStyle, scoreString: string): string {
+function buildSingleStyleSystem(style: VarkStyle, scoreString: string): string {
   const instructions = SYSTEM_INSTRUCTIONS[style];
   return [
     `I am a ${STYLE_DESCRIPTIONS[style]} learner (VARK: ${scoreString}).`,
@@ -93,7 +93,7 @@ function buildSingleStyleSystem(scores: VarkScores, style: VarkStyle, scoreStrin
   ].join('\n');
 }
 
-function buildDualStyleSystem(scores: VarkScores, dominant: VarkStyle[], scoreString: string): string {
+function buildDualStyleSystem(dominant: VarkStyle[], scoreString: string): string {
   const [a, b] = dominant;
   const labelA = STYLE_DESCRIPTIONS[a];
   const labelB = STYLE_DESCRIPTIONS[b];
@@ -107,11 +107,17 @@ function buildDualStyleSystem(scores: VarkScores, dominant: VarkStyle[], scoreSt
     '',
     `${insA.structure} ${insB.structure}`,
     '',
-    `When I seem stuck, try both: ${insA.checkIn.replace('When I seem stuck, ', '')} Alternatively, ${insB.checkIn.replace('When I seem stuck, ', '').charAt(0).toLowerCase()}${insB.checkIn.replace('When I seem stuck, ', '').slice(1)}`,
+    (() => {
+      const checkInPrefix = 'When I seem stuck, ';
+      const actionA = insA.checkIn.replace(checkInPrefix, '');
+      const actionB = insB.checkIn.replace(checkInPrefix, '');
+      const actionBLower = actionB.charAt(0).toLowerCase() + actionB.slice(1);
+      return `When I seem stuck, try both: ${actionA} Alternatively, ${actionBLower}`;
+    })(),
   ].join('\n');
 }
 
-function buildMultimodalThreePlusSystem(scores: VarkScores, dominant: VarkStyle[], scoreString: string): string {
+function buildMultimodalThreePlusSystem(dominant: VarkStyle[], scoreString: string): string {
   const styleList = dominant.map(s => STYLE_DESCRIPTIONS[s]).join(', ');
 
   return [
