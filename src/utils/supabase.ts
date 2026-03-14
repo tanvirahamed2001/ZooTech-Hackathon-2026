@@ -5,13 +5,21 @@ import type { EmailCapture, VarkScores } from '../types';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Missing Supabase environment variables. Please connect to Supabase.');
+export const supabaseConfigured = !!(supabaseUrl && supabaseAnonKey);
+
+if (!supabaseConfigured) {
+  console.warn(
+    'Missing Supabase environment variables (VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY). ' +
+    'Database features will be unavailable.'
+  );
 }
 
+// Use a placeholder when env vars are missing so createClient doesn't throw at
+// module init time and crash the entire app.  API calls against the placeholder
+// will simply fail, which all call-sites already handle via try/catch.
 export const supabase = createClient<Database>(
-  supabaseUrl ?? '',
-  supabaseAnonKey ?? ''
+  supabaseUrl || 'https://placeholder.supabase.co',
+  supabaseAnonKey || 'placeholder'
 );
 
 // Get user's IP address and user agent
