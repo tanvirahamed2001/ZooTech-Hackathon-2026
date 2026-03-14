@@ -15,22 +15,10 @@ export type UserIntent = {
   customReason?: string;
 };
 
-export type EmailCapture = {
-  firstName?: string;
-  email: string;
-  reason: string;
-  customReason?: string;
-  recordId?: string; // Add this to track the database record
-  ipAddress?: string; // Track IP address
-  userAgent?: string; // Track browser info
-  hpField?: string; // Add honeypot field
-};
-
 export type QuizState = {
   currentQuestionIndex: number;
   answers: Record<number, string[]>;
   userIntent?: UserIntent;
-  emailCapture?: EmailCapture;
   isCompleted: boolean;
 };
 
@@ -53,5 +41,4 @@ export type QuizContextType = {
   calculateScores: () => VarkScores;
   resetQuiz: () => void;
   setUserIntent: (intent: UserIntent) => void;
-  setEmailCapture: (capture: EmailCapture) => void;
 };

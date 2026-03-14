@@ -34,7 +34,6 @@ At the beginning of every new conversation:
 
 ### TypeScript
 - All new components and utilities must be fully typed — no implicit `any`.
-- New Supabase schema changes must be reflected in `src/types/supabase.ts`.
 - New data shapes used across components must be added to `src/types/index.ts`.
 
 ### Styling
@@ -44,20 +43,7 @@ At the beginning of every new conversation:
 
 ### State & Data
 - Quiz state lives in `QuizContext` + `sessionStorage`. Do not add local component state for quiz data.
-- Supabase calls belong in `src/utils/supabase.ts`. Do not call Supabase directly from components.
-- Analytics calls belong in `src/utils/analytics.ts`.
-
-### Supabase Edge Functions
-- All Edge Functions live in `supabase/functions/<function-name>/index.ts`.
-- Every Edge Function must handle CORS preflight (`OPTIONS`) correctly.
-- Validate all inputs with Zod before processing.
-- Check honeypot fields before reCAPTCHA — it's cheaper.
-- Never log sensitive data (email addresses, IP addresses) to the console in production.
-
-### Security
-- Never hardcode secrets in source code. Use `Deno.env.get()` in Edge Functions and `import.meta.env.VITE_*` in the frontend.
-- The analytics dashboard token (`SECRET123`) is hardcoded and must be moved to an env variable — see tasks.md.
-- Always validate honeypot + reCAPTCHA before any DB write that accepts user input.
+- Score calculation and results URL encoding are pure client-side operations — no network calls.
 
 ---
 
@@ -82,33 +68,13 @@ At the beginning of every new conversation:
 | Animation | Framer Motion | 11.18 |
 | Icons | Lucide React | 0.344 |
 | Charts | Recharts | 2.12 |
-| Backend / DB | Supabase (PostgreSQL + Edge Functions) | 2.39 |
-| Edge Function runtime | Deno | (managed by Supabase) |
-| Email | nodemailer via Gmail SMTP | 6.9 |
-| Input validation (Edge) | Zod | 3.22 |
-| User-agent parsing | ua-parser-js | 1.0 |
-| Spam protection | Google reCAPTCHA v3 + honeypot | — |
 | Deployment | Vercel | — |
 
 ---
 
 ## Environment Variables Reference
 
-### Frontend (Vite)
-```
-VITE_SUPABASE_URL
-VITE_SUPABASE_ANON_KEY
-VITE_RECAPTCHA_SITE_KEY
-```
-
-### Supabase Edge Functions (Deno.env)
-```
-SUPABASE_URL
-SUPABASE_SERVICE_ROLE_KEY
-GMAIL_ADDRESS
-GMAIL_APP_PASSWORD
-RECAPTCHA_SECRET
-```
+No environment variables are required. The app is fully stateless and runs with zero configuration.
 
 ---
 
@@ -116,31 +82,15 @@ RECAPTCHA_SECRET
 
 ```
 src/
-  App.tsx                          All routes
-  types/index.ts                   Core types (Question, VarkScores, QuizState, EmailCapture)
-  types/supabase.ts                Supabase DB schema types
-  types/analytics.ts               Analytics types
+  App.tsx                          All routes (/, /quiz, /results, /r/:hash)
+  types/index.ts                   Core types (Question, VarkScores, QuizState)
   data/questions.ts                13 VARK quiz questions
-  contexts/QuizContext.tsx         Quiz state management
-  contexts/ThemeContext.tsx        Dark/light mode
-  utils/supabase.ts                All Supabase client calls
-  utils/analytics.ts               Visitor tracking functions
-  components/landing/              LandingPage + email capture modal
+  contexts/QuizContext.tsx         Quiz state management (sessionStorage)
+  contexts/ThemeContext.tsx        Dark/light mode (localStorage)
+  components/landing/              LandingPage
   components/quiz/                 QuizContainer, QuizIntro, Question, ProgressBar
   components/results/              ResultsPage, ResultsChart, ResultsExplanation
-  components/my-results/           MyResultsPage
-  components/analytics/            AnalyticsPage, VisitorTracker
-  components/unsubscribe/          UnsubscribePage
   components/shared/               ThemeToggle
-
-supabase/
-  functions/send-vark-report/      Email report Edge Function
-  functions/enrich-analytics/      IP geolocation enrichment Edge Function
-  functions/get-my-results/        Historical results lookup Edge Function
-  functions/analytics-data/        Single-site analytics aggregation
-  functions/analytics-data-enriched/
-  functions/analytics-data-multi-site/
-  migrations/                      Ordered SQL migration files
 ```
 
 ---
@@ -151,3 +101,11 @@ supabase/
 - Read entire codebase
 - Generated `README.md`, `PRD.md`, `cursor.md`, `planning.md`, `tasks.md`
 - Established project documentation framework and AI Prompts feature spec
+
+### 2026-03-14 — Milestone 4: Stateless refactor
+- Removed all Supabase, Edge Functions, email capture, analytics, and reCAPTCHA code
+- Deleted: `src/utils/supabase.ts`, `src/utils/analytics.ts`, `src/types/supabase.ts`, `src/types/analytics.ts`
+- Deleted: `MyResultsPage`, `UnsubscribePage`, `VisitorTracker`, `AnalyticsPage`
+- Removed routes `/my-results`, `/u/:id`, `/analytics` from `App.tsx`
+- Uninstalled `@supabase/supabase-js`, `ua-parser-js`, `@types/ua-parser-js`
+- App is now fully stateless — no network calls, no env vars required
