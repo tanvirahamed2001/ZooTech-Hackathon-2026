@@ -1,6 +1,6 @@
 # Tasks — Varkly
 
-**Last updated:** 2026-03-14
+**Last updated:** 2026-03-14 (Milestone 4 complete)
 
 Tasks are organised by milestone. Check off items as they are completed and add the date: `[x] Task description [2026-03-14]`.
 
@@ -61,28 +61,28 @@ Tasks are organised by milestone. Check off items as they are completed and add 
 
 Remove all code that depends on Supabase, email delivery, or server-side persistence. The app must function with zero network calls.
 
-- [ ] Remove email capture modal from `LandingPage.tsx` entirely
-- [ ] Remove "My results" link from the landing page nav
-- [ ] Remove `EmailCapture` type and all email-related fields from `src/types/index.ts`
-- [ ] Remove email capture state (`emailCapture`, `setEmailCapture`) from `QuizContext.tsx`
-- [ ] Remove save status banner (saving / saved / error) from `ResultsPage.tsx`
-- [ ] Remove email status banner (sending / sent / error) from `ResultsPage.tsx`
-- [ ] Remove all Supabase calls from `ResultsPage.tsx` (`updateQuizResponse`, `saveQuizResponse`, `sendVarkReport`)
-- [ ] Delete `src/utils/supabase.ts`
-- [ ] Delete `src/utils/analytics.ts`
-- [ ] Delete `src/types/supabase.ts`
-- [ ] Delete `src/types/analytics.ts`
-- [ ] Delete `src/components/my-results/MyResultsPage.tsx`
-- [ ] Delete `src/components/unsubscribe/UnsubscribePage.tsx`
-- [ ] Delete `src/components/analytics/VisitorTracker.tsx`
-- [ ] Delete `src/components/analytics/AnalyticsPage.tsx`
-- [ ] Remove `/my-results`, `/u/:id`, and `/analytics` routes from `App.tsx`
-- [ ] Remove `VisitorTracker` from `App.tsx`
-- [ ] Remove `@supabase/supabase-js` from `package.json`
-- [ ] Remove `ua-parser-js` and `@types/ua-parser-js` from `package.json`
-- [ ] Remove reCAPTCHA script loading and all `grecaptcha` references from `LandingPage.tsx`
-- [ ] Update `cursor.md` tech stack table to reflect removed dependencies
-- [ ] Update `README.md` to reflect stateless architecture and simplified setup
+- [x] Remove email capture modal from `LandingPage.tsx` entirely [2026-03-14]
+- [x] Remove "My results" link from the landing page nav [2026-03-14]
+- [x] Remove `EmailCapture` type and all email-related fields from `src/types/index.ts` [2026-03-14]
+- [x] Remove email capture state (`emailCapture`, `setEmailCapture`) from `QuizContext.tsx` [2026-03-14]
+- [x] Remove save status banner (saving / saved / error) from `ResultsPage.tsx` [2026-03-14]
+- [x] Remove email status banner (sending / sent / error) from `ResultsPage.tsx` [2026-03-14]
+- [x] Remove all Supabase calls from `ResultsPage.tsx` (`updateQuizResponse`, `saveQuizResponse`, `sendVarkReport`) [2026-03-14]
+- [x] Delete `src/utils/supabase.ts` [2026-03-14]
+- [x] Delete `src/utils/analytics.ts` [2026-03-14]
+- [x] Delete `src/types/supabase.ts` [2026-03-14]
+- [x] Delete `src/types/analytics.ts` [2026-03-14]
+- [x] Delete `src/components/my-results/MyResultsPage.tsx` [2026-03-14]
+- [x] Delete `src/components/unsubscribe/UnsubscribePage.tsx` [2026-03-14]
+- [x] Delete `src/components/analytics/VisitorTracker.tsx` [2026-03-14]
+- [x] Delete `src/components/analytics/AnalyticsPage.tsx` [2026-03-14]
+- [x] Remove `/my-results`, `/u/:id`, and `/analytics` routes from `App.tsx` [2026-03-14]
+- [x] Remove `VisitorTracker` from `App.tsx` [2026-03-14]
+- [x] Remove `@supabase/supabase-js` from `package.json` [2026-03-14]
+- [x] Remove `ua-parser-js` and `@types/ua-parser-js` from `package.json` [2026-03-14]
+- [x] Remove reCAPTCHA script loading and all `grecaptcha` references from `LandingPage.tsx` [2026-03-14]
+- [x] Update `cursor.md` tech stack table to reflect removed dependencies [2026-03-14]
+- [x] Update `README.md` to reflect stateless architecture and simplified setup [2026-03-14]
 
 ---
 
