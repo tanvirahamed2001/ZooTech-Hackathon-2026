@@ -112,6 +112,21 @@ src/
 - Uninstalled `@supabase/supabase-js`, `ua-parser-js`, `@types/ua-parser-js`
 - App is now fully stateless — no network calls, no env vars required
 
+### 2026-03-14 — Milestone 6: Shareable link + codebase audit
+
+**Shareable results link**
+- Added "Your results link" card at the bottom of `ResultsPage` (between `AIPromptsCard` and Retake Quiz), visible on both `/results` and `/r/:hash`
+- Displays the full `/r/:hash` URL in a monospaced selectable box with a single "Copy link" button
+- Button shows emerald "Copied!" feedback for 2 s, independent of the Share/Copy buttons at the top of the page
+
+**Codebase audit — removed files**
+- `.bolt/` — entire StackBlitz scaffolding directory (`config.json`, `prompt`, `supabase_discarded_migrations/`)
+- `supabase/functions/` — 6 Edge Functions: `analytics-data`, `analytics-data-enriched`, `analytics-data-multi-site`, `enrich-analytics`, `get-my-results`, `send-vark-report`
+- `supabase/migrations/` — 9 SQL migration files from pre-stateless architecture
+- `scripts/` — 3 Supabase maintenance scripts (`check-connection.js`, `integrity-check.js`, `list-tables.js`); `list-tables.js` contained a hardcoded service role key
+- `public/AI braintrust logo transparent.png` + copy — stale branding assets from old project name
+- `public/_redirects` — Netlify-specific rewrite config (app deploys on Vercel via `vercel.json`)
+
 ### 2026-03-14 — Milestone 5: AI Prompts feature
 - Created `src/utils/aiPrompts.ts` — pure function `generateAIPrompts(scores)` returns personalised system + conversation prompts
 - Templates for all 4 pure styles, all two-style combinations, and 3+ multimodal
