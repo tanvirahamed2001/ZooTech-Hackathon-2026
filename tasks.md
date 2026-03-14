@@ -2,7 +2,7 @@
 
 **Last updated:** 2026-03-14 (Milestone 6 in progress)
 
-Tasks are organised by milestone. Check off items as they are completed and add the date: `[x] Task description [2026-03-14]`.
+Tasks are organized by milestone. Check off items as they are completed and add the date: `[x] Task description [2026-03-14]`.
 
 ---
 
@@ -93,14 +93,14 @@ Remove all code that depends on Supabase, email delivery, or server-side persist
 - [x] Define broad multimodal prompt template for three-or-more-style ties [2026-03-14]
 - [x] Create `generateAIPrompts(scores: VarkScores): { systemPrompt: string; conversationPrompt: string }` in `src/utils/aiPrompts.ts` [2026-03-14]
 - [x] Write unit tests for `generateAIPrompts` covering all 4 pure styles + key multimodal combinations (Vitest) [2026-03-14]
-- [x] Build `AIPromptsCard` component with clearly labelled System Prompt and Conversation Prompt blocks [2026-03-14]
+- [x] Build `AIPromptsCard` component with clearly labeled System Prompt and Conversation Prompt blocks [2026-03-14]
 - [x] Add one-click copy button to each prompt block [2026-03-14]
 - [x] Add copy-with-feedback state: button text changes to "Copied!" for 2 seconds after click [2026-03-14]
 - [x] Add explanatory text above each prompt block explaining what it is and when to use it [2026-03-14]
 - [x] Insert `AIPromptsCard` in `ResultsPage` between `ResultsExplanation` and "Retake Quiz" card [2026-03-14]
 - [x] Confirm `AIPromptsCard` renders correctly on the shareable `/r/:hash` results page [2026-03-14]
 - [x] Add full dark mode styling to `AIPromptsCard` [2026-03-14]
-- [ ] Test System Prompt manually with ChatGPT, Claude, and Gemini — confirm AI behaviour matches VARK style
+- [ ] Test System Prompt manually with ChatGPT, Claude, and Gemini — confirm AI behavior matches VARK style
 - [ ] Test Conversation Prompt manually in a live session — confirm mid-session reorientation works
 - [ ] Update `PRD.md` with final approved prompt copy once wording is confirmed
 

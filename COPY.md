@@ -1,6 +1,6 @@
 # COPY.md — Varkly Customer-Facing Text
 
-> Read-only extraction for copy review. Every piece of customer-facing text in the app, organised by page and component. No text has been altered.
+> Read-only extraction for copy review. Every piece of customer-facing text in the app, organized by page and component. No text has been altered.
 
 ---
 
@@ -555,7 +555,7 @@ The message shown depends on the user's dominant learning style(s).
 | Element | Text |
 |---|---|
 | Paragraph 1 | You have a **multimodal learning style** with strengths across several categories. This means you're adaptable and can learn effectively through different methods. |
-| RayRayRay quote | RayRayRay says: *"Your brain is like a learning Swiss Army knife – ready for whatever information comes your way. Lucky you!"* |
+| RayRayRay quote | RayRayRay says: *"Your brain is like a learning Swiss Army knife — ready for whatever information comes your way. Lucky you!"* |
 
 ---
 
@@ -726,7 +726,7 @@ These are the exact text strings injected into the generated System Prompt. The 
 > Use conversational, spoken-style language. Explain concepts as if you are walking me through them out loud — use rhetorical questions, verbal analogies, and storytelling to make ideas stick.
 
 **Read/Write (R):**
-> Use precise written definitions, labelled terminology, and numbered lists. Provide structured summaries with clear headings and sub-points so information reads like well-organised reference material.
+> Use precise written definitions, labeled terminology, and numbered lists. Provide structured summaries with clear headings and sub-points so information reads like well-organized reference material.
 
 **Kinesthetic (K):**
 > Lead with a concrete, real-world example or hands-on scenario before introducing any theory. Frame every explanation around doing — "here's how you'd apply this" — rather than abstract description.
@@ -734,13 +734,13 @@ These are the exact text strings injected into the generated System Prompt. The 
 ### Structure Instructions (per style)
 
 **Visual (V):**
-> Favour visual hierarchy — indent, bold key terms, and separate ideas with whitespace so the page layout itself communicates structure.
+> Favor visual hierarchy — indent, bold key terms, and separate ideas with whitespace so the page layout itself communicates structure.
 
 **Auditory (A):**
 > Avoid dry bullet lists when a flowing narrative would be clearer. Write the way a great teacher speaks.
 
 **Read/Write (R):**
-> Prioritise accuracy of wording — define terms before using them and provide written outlines for complex topics.
+> Prioritize accuracy of wording — define terms before using them and provide written outlines for complex topics.
 
 **Kinesthetic (K):**
 > Provide step-by-step practical exercises, worked examples, or "try this now" activities wherever possible.
@@ -840,10 +840,11 @@ Used when the native OS share sheet is triggered via the Share button.
 
 ## 28. 404 Page
 
-**Source:** `src/App.tsx`
+**Source:** `src/components/shared/NotFoundPage.tsx`
 
-There is currently **no dedicated 404 page**. Unmatched routes fall through silently (no catch-all `<Route>` is defined). This is a known open task in `tasks.md`:
-
-> — [ ] Add proper 404 page for unmatched routes
-
-No customer-facing copy exists yet for this page.
+| Element | Text |
+|---|---|
+| Page title (H1) | 404 |
+| Heading (H2) | Page not found |
+| Body text | The page you're looking for doesn't exist or has been moved. |
+| CTA button | Back to Home |

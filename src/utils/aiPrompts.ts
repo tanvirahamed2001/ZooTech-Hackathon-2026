@@ -21,7 +21,7 @@ const SYSTEM_INSTRUCTIONS: Record<VarkStyle, { communication: string; structure:
     communication:
       'Structure every response with clear headers, sub-headers, and bullet points instead of dense paragraphs. Use tables, diagrams (ASCII or described), flowcharts, and spatial metaphors whenever they can clarify a concept.',
     structure:
-      'Favour visual hierarchy — indent, bold key terms, and separate ideas with whitespace so the page layout itself communicates structure.',
+      'Favor visual hierarchy — indent, bold key terms, and separate ideas with whitespace so the page layout itself communicates structure.',
     checkIn:
       'When I seem stuck, offer a diagram, visual analogy, or restructured layout to reframe the idea.',
   },
@@ -35,9 +35,9 @@ const SYSTEM_INSTRUCTIONS: Record<VarkStyle, { communication: string; structure:
   },
   R: {
     communication:
-      'Use precise written definitions, labelled terminology, and numbered lists. Provide structured summaries with clear headings and sub-points so information reads like well-organised reference material.',
+      'Use precise written definitions, labeled terminology, and numbered lists. Provide structured summaries with clear headings and sub-points so information reads like well-organized reference material.',
     structure:
-      'Prioritise accuracy of wording — define terms before using them and provide written outlines for complex topics.',
+      'Prioritize accuracy of wording — define terms before using them and provide written outlines for complex topics.',
     checkIn:
       'When I seem stuck, offer a definitions-first restatement or a written outline of the key points.',
   },

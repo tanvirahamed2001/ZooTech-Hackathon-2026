@@ -77,7 +77,7 @@ const ResultsExplanation: React.FC<ResultsExplanationProps> = ({ dominantStyles 
             You have a <strong className="text-gray-800 dark:text-gray-100">multimodal learning style</strong> with strengths across several categories. This means you're adaptable and can learn effectively through different methods.
           </p>
           <p className="text-gray-600 dark:text-gray-300">
-            RayRayRay says: <span className="italic text-violet-700 dark:text-violet-400">"Your brain is like a learning Swiss Army knife – ready for whatever information comes your way. Lucky you!"</span>
+            RayRayRay says: <span className="italic text-violet-700 dark:text-violet-400">"Your brain is like a learning Swiss Army knife — ready for whatever information comes your way. Lucky you!"</span>
           </p>
         </div>
       ) : (

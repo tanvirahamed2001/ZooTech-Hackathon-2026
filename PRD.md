@@ -10,7 +10,7 @@
 
 Most people interact with AI assistants the same way every day: they type a question, get a generic response, and never think to tell the AI how they actually want to receive information. The AI defaults to a one-size-fits-all communication style that works for nobody in particular.
 
-This is a solved problem in human learning science. The VARK framework has been used for decades to categorise how people best absorb and process new information across four dimensions: **Visual**, **Auditory**, **Read/Write**, and **Kinesthetic**. But almost no one applies this knowledge to their AI usage — not because they don't want to, but because the cognitive overhead of figuring out their own VARK profile and then translating it into a usable AI prompt is too high.
+This is a solved problem in human learning science. The VARK framework has been used for decades to categorize how people best absorb and process new information across four dimensions: **Visual**, **Auditory**, **Read/Write**, and **Kinesthetic**. But almost no one applies this knowledge to their AI usage — not because they don't want to, but because the cognitive overhead of figuring out their own VARK profile and then translating it into a usable AI prompt is too high.
 
 **Varkly eliminates that overhead entirely.**
 
@@ -24,7 +24,7 @@ Varkly is a 13-question VARK framework assessment that determines how a person b
 
 | Dimension | Code | Description |
 |---|---|---|
-| Visual | V | Processes information through spatial organisation, diagrams, charts, colour, and visual structure |
+| Visual | V | Processes information through spatial organization, diagrams, charts, color, and visual structure |
 | Auditory | A | Processes information through listening, discussion, spoken explanation, and verbal patterns |
 | Read/Write | R | Processes information through words — reading, taking notes, written lists, and definitions |
 | Kinesthetic | K | Processes information through experience, examples, practice, and physical engagement with material |
@@ -89,13 +89,13 @@ Varkly solves that by turning a person's VARK score into two immediately usable 
 - Target length: 25–40 words
 
 **Example — Visual dominant:**
-> I'm a Visual learner — I process information better with structure, diagrams, and visual organisation than with prose. Can you reframe your last response using headers, a table, or a visual breakdown?
+> I'm a Visual learner — I process information better with structure, diagrams, and visual organization than with prose. Can you reframe your last response using headers, a table, or a visual breakdown?
 
 **Example — Auditory dominant:**
 > I'm an Auditory learner — I follow explanations better when they're conversational and talk me through things step by step. Can you walk me through that again as if you're explaining it out loud?
 
 **Example — Read/Write dominant:**
-> I'm a Read/Write learner — I absorb information best through clear written definitions, structured lists, and labelled terminology. Can you restate that as a numbered list or a defined set of terms?
+> I'm a Read/Write learner — I absorb information best through clear written definitions, structured lists, and labeled terminology. Can you restate that as a numbered list or a defined set of terms?
 
 **Example — Kinesthetic dominant:**
 > I'm a Kinesthetic learner — theory doesn't land for me until I can see how it applies. Can you give me a concrete real-world example or a step-by-step walkthrough I can follow?
@@ -143,7 +143,7 @@ Each dimension maps to a fixed set of communication instructions. These instruct
 - Offer to re-explain using a different verbal framing when asked to clarify
 
 **Read/Write (R):**
-- Use precise written definitions, numbered lists, and labelled terminology
+- Use precise written definitions, numbered lists, and labeled terminology
 - Provide structured summaries with headings and sub-points
 - Reference exact words and defined concepts rather than analogies
 - Avoid visual metaphors — convey meaning through written precision
@@ -256,6 +256,6 @@ Success for Varkly is measured primarily on prompt adoption — the degree to wh
 - Admin analytics dashboards
 - AI prompt personalisation beyond VARK score (e.g. topic-specific prompts, tone customisation)
 - Direct AI integrations (e.g. a browser extension that auto-pastes the system prompt)
-- Team or organisational dashboards
+- Team or organizational dashboards
 - Prompt effectiveness tracking (whether the prompts actually improve AI responses for users)
 - A/B testing of prompt copy variations

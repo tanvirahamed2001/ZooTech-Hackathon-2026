@@ -116,7 +116,7 @@ const dominantStyles = (['V', 'A', 'R', 'K'] as const).filter(k => scores[k] ===
 - Check-in: re-explain using a different verbal framing or analogy
 
 **Read/Write (R):**
-- Use precise written definitions, numbered lists, and labelled terminology
+- Use precise written definitions, numbered lists, and labeled terminology
 - Provide structured summaries with headings and sub-points
 - Check-in: offer a written outline or definitions-first restatement
 
