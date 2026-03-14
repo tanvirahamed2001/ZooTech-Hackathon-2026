@@ -38,7 +38,7 @@ At the beginning of every new conversation:
 
 ### Styling
 - Use Tailwind utility classes exclusively — do not add inline styles or new CSS files unless absolutely necessary.
-- Dark mode: always include `dark:` variants for any new text, background, or border colours.
+- Dark mode: always include `dark:` variants for any new text, background, or border colors.
 - Follow the existing design tokens: `violet-*` for primary, `indigo-*` for secondary, `emerald-*` for success, `red-*` for error, `gray-*` for neutral.
 
 ### State & Data
@@ -131,7 +131,7 @@ src/
 - Created `src/utils/aiPrompts.ts` — pure function `generateAIPrompts(scores)` returns personalised system + conversation prompts
 - Templates for all 4 pure styles, all two-style combinations, and 3+ multimodal
 - Style instruction bank per VARK dimension (communication, structure, check-in)
-- Built `AIPromptsCard` component with labelled System Prompt and Conversation Prompt blocks
+- Built `AIPromptsCard` component with labeled System Prompt and Conversation Prompt blocks
 - Copy button with "Copied!" feedback state (2s) on each block
 - Clipboard API with `execCommand` fallback
 - Explanatory text above each prompt block
