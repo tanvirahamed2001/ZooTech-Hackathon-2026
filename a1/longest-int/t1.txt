@@ -1,4 +1,0 @@
-This is a line without a number.
-This is a line with 1 number.
-This is a line with a loooong number "123456789".
-Numbers inside a string num123and32100000000000000000000.
