@@ -1,6 +1,0 @@
-word1
-   wordone!
-
-word1word2word!a1b1c
-
-last word   without ...newline
