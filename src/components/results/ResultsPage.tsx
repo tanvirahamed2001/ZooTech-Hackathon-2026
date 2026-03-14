@@ -5,6 +5,7 @@ import { Share2, RotateCcw, Copy } from 'lucide-react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ResultsChart from './ResultsChart';
 import ResultsExplanation from './ResultsExplanation';
+import AIPromptsCard from './AIPromptsCard';
 import type { VarkScores } from '../../types';
 import ThemeToggle from '../shared/ThemeToggle';
 
@@ -196,6 +197,8 @@ const ResultsPage: React.FC = () => {
               </div>
 
               <ResultsExplanation dominantStyles={dominantStyles} />
+
+              <AIPromptsCard scores={scores} />
 
               <div className="card text-center">
                 <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Want to try again?</h3>
