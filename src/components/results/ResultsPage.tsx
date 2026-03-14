@@ -127,7 +127,11 @@ const ResultsPage: React.FC = () => {
         default: return "Congratulations on completing the assessment!";
       }
     } else {
-      return `You have a multimodal learning style with strengths in ${dominantStyles.map(getFullStyleName).join(' and ')}!`;
+      const names = dominantStyles.map(getFullStyleName);
+      const formatted = names.length > 2
+        ? `${names.slice(0, -1).join(', ')}, and ${names[names.length - 1]}`
+        : names.join(' and ');
+      return `You have a multimodal learning style with strengths in ${formatted}!`;
     }
   };
 
