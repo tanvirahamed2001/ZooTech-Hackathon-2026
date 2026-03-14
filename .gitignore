@@ -209,6 +209,9 @@ supabase/logs/
 .ai-tools/
 .agents/
 
+# Documentation directory (ignored)
+docs/
+
 # General AI development tools
 .openai/
 .claude/
