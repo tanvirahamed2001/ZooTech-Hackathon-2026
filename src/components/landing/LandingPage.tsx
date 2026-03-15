@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
 import { useQuiz } from '../../contexts/QuizContext';
-import ThemeToggle from '../shared/ThemeToggle';
+import { usePageMeta } from '../../hooks/usePageMeta';
+import { APP } from '../../constants/app';
 
 const LandingPage: React.FC = () => {
   const { startQuiz } = useQuiz();
+  usePageMeta('', APP.description);
 
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
@@ -20,22 +21,7 @@ const LandingPage: React.FC = () => {
 
   return (
     <div className="min-h-screen">
-      <motion.nav
-        className="sticky top-0 z-40 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-violet-100 dark:border-gray-700 shadow-sm"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.4 }}
-      >
-        <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
-            <img src="/varkly-icon.svg" alt="Varkly" className="h-8 w-8 mr-1.5" />
-            <span className="text-lg font-semibold text-gray-800 dark:text-gray-100 tracking-tight">Varkly</span>
-          </Link>
-          <ThemeToggle />
-        </div>
-      </motion.nav>
-
-      <div className="max-w-4xl mx-auto px-4 py-12 md:py-20">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 md:py-20">
         <motion.header
           className="text-center mb-14 md:mb-20"
           initial={{ opacity: 0, y: -12 }}
@@ -46,7 +32,7 @@ const LandingPage: React.FC = () => {
             Your AI doesn't know how your brain works. Fix that in 90 seconds.
           </h1>
           <p className="text-gray-600 dark:text-gray-300 text-lg md:text-xl max-w-xl mx-auto">
-            Answer 13 questions. Get a personalized prompt that makes any AI speak your brain's language.
+            Answer {APP.quizQuestionCount} questions. Get a personalized prompt that makes any AI speak your brain's language.
           </p>
         </motion.header>
 
@@ -61,7 +47,7 @@ const LandingPage: React.FC = () => {
           </h2>
 
           <p className="text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
-            Everyone's brain has a preferred way of processing information. When your AI doesn't know your style, you spend more energy decoding its answers than actually learning. Varkly fixes that.
+            Everyone's brain has a preferred way of processing information. When your AI doesn't know your style, you spend more energy decoding its answers than actually learning. {APP.name} fixes that.
           </p>
 
           <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">
@@ -111,7 +97,7 @@ const LandingPage: React.FC = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.4 }}
         >
-          <p>13 questions • 90 seconds • No login required</p>
+          <p>{APP.quizQuestionCount} questions • {APP.quizEstimatedSeconds} seconds • No login required</p>
           <p className="mt-1">Results available immediately</p>
         </motion.div>
       </div>

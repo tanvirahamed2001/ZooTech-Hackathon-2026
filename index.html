@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <script>
       (function() {
-        var t = localStorage.getItem('varkly-theme');
+        var t = localStorage.getItem('varkly-theme'); // keep key in sync with STORAGE_KEYS.theme
         if (t === 'dark' || (t !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches))
           document.documentElement.classList.add('dark');
         else
@@ -12,11 +12,16 @@
       })();
     </script>
     <link rel="icon" type="image/svg+xml" href="/varkly-icon.svg" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#7c3aed" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1e1b4b" media="(prefers-color-scheme: dark)" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <title>Varkly — VARK Learning Style Quiz</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
     <style>
       /* SF-style: tight letter-spacing on headings when not using system font */
       body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }

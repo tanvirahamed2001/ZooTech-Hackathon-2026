@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Copy, Check, Sparkles, MessageSquare, Settings } from 'lucide-react';
 import { generateAIPrompts } from '../../utils/aiPrompts';
+import { useToast } from '../../contexts/ToastContext';
 import type { VarkScores } from '../../types';
 
 type AIPromptsCardProps = {
@@ -17,23 +18,31 @@ type PromptBlockProps = {
 
 const PromptBlock: React.FC<PromptBlockProps> = ({ label, description, icon, prompt }) => {
   const [copied, setCopied] = useState(false);
+  const { addToast } = useToast();
 
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(prompt);
       setCopied(true);
+      addToast('Prompt copied to clipboard');
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      const textarea = document.createElement('textarea');
-      textarea.value = prompt;
-      textarea.style.position = 'fixed';
-      textarea.style.opacity = '0';
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textarea);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      try {
+        const textarea = document.createElement('textarea');
+        textarea.value = prompt;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        setCopied(true);
+        addToast('Prompt copied to clipboard');
+        setTimeout(() => setCopied(false), 2000);
+      } catch {
+        addToast('Could not copy prompt.', 'error');
+      }
     }
   };
 
@@ -46,12 +55,13 @@ const PromptBlock: React.FC<PromptBlockProps> = ({ label, description, icon, pro
         </div>
         <motion.button
           onClick={handleCopy}
-          className={`flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-lg transition-all duration-200 ${
+          className={`flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-lg transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 ${
             copied
               ? 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-700'
               : 'text-violet-600 dark:text-violet-400 hover:bg-violet-50 dark:hover:bg-violet-900/30 border border-violet-200 dark:border-violet-700 hover:border-violet-400 dark:hover:border-violet-500'
           }`}
           whileTap={{ scale: 0.95 }}
+          aria-label={copied ? 'Copied' : `Copy ${label}`}
         >
           {copied ? (
             <>

@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useQuiz } from '../../contexts/QuizContext';
-import { Share2, RotateCcw, Copy, Link } from 'lucide-react';
+import { useToast } from '../../contexts/ToastContext';
+import { Share2, RotateCcw, Copy, Link2 } from 'lucide-react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ResultsChart from './ResultsChart';
 import ResultsExplanation from './ResultsExplanation';
 import AIPromptsCard from './AIPromptsCard';
+import ResultsLoadingSkeleton from './ResultsLoadingSkeleton';
 import type { VarkScores } from '../../types';
-import ThemeToggle from '../shared/ThemeToggle';
+import { usePageMeta } from '../../hooks/usePageMeta';
+import { APP } from '../../constants/app';
 
 const ResultsPage: React.FC = () => {
   const { quizState, calculateScores, resetQuiz } = useQuiz();
+  const { addToast } = useToast();
   const [scores, setScores] = useState<VarkScores>({ V: 0, A: 0, R: 0, K: 0 });
   const [resultsUrl, setResultsUrl] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -18,6 +22,8 @@ const ResultsPage: React.FC = () => {
   const [copyLinkSuccess, setCopyLinkSuccess] = useState<boolean>(false);
   const { hash } = useParams();
   const navigate = useNavigate();
+
+  usePageMeta('Your Results', `View your VARK learning style results and personalized AI prompts — ${APP.name}`);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -67,9 +73,10 @@ const ResultsPage: React.FC = () => {
     try {
       await navigator.clipboard.writeText(resultsUrl);
       setCopySuccess(true);
+      addToast('Link copied to clipboard');
       setTimeout(() => setCopySuccess(false), 2000);
     } catch {
-      alert('Could not copy to clipboard. Please copy the URL manually.');
+      addToast('Could not copy. Please copy the URL manually.', 'error');
     }
   };
 
@@ -77,9 +84,10 @@ const ResultsPage: React.FC = () => {
     try {
       await navigator.clipboard.writeText(resultsUrl);
       setCopyLinkSuccess(true);
+      addToast('Results link copied to clipboard');
       setTimeout(() => setCopyLinkSuccess(false), 2000);
     } catch {
-      alert('Could not copy to clipboard. Please copy the URL manually.');
+      addToast('Could not copy. Please copy the URL manually.', 'error');
     }
   };
 
@@ -87,10 +95,11 @@ const ResultsPage: React.FC = () => {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'My Varkly Learning Style Results',
+          title: `My ${APP.name} Learning Style Results`,
           text: 'Check out my learning style profile!',
           url: resultsUrl,
         });
+        addToast('Thanks for sharing!');
       } catch (err) {
         if (err instanceof Error && err.name !== 'AbortError') {
           await copyToClipboard();
@@ -137,41 +146,22 @@ const ResultsPage: React.FC = () => {
 
   return (
     <div className="min-h-screen">
-      <nav className="sticky top-0 z-40 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-violet-100 dark:border-gray-700 shadow-sm">
-        <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
-          <div className="flex items-center">
-            <img src="/varkly-icon.svg" alt="Varkly" className="h-7 w-7 mr-1.5" />
-            <span className="text-base font-semibold text-gray-800 dark:text-gray-100">Varkly</span>
-          </div>
-          <ThemeToggle />
-        </div>
-      </nav>
-
-      <div className="max-w-4xl mx-auto py-8 px-4">
+      <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6">
         <motion.header
           className="text-center mb-8"
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-violet-600 to-indigo-600 dark:from-violet-400 dark:to-indigo-400 bg-clip-text text-transparent">Your Results</h1>
+          <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-violet-600 to-indigo-600 dark:from-violet-400 dark:to-indigo-400 bg-clip-text text-transparent">
+            Your Results
+          </h1>
           <p className="text-gray-600 dark:text-gray-300 text-sm mt-1">VARK Learning Style</p>
         </motion.header>
 
         <div>
           {isLoading ? (
-            <motion.div
-              className="card text-center py-16"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.3 }}
-            >
-              <div className="flex flex-col items-center">
-                <div className="w-16 h-16 border-4 border-violet-500 border-t-transparent rounded-full animate-spin mb-4" />
-                <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2">Analyzing Your Results...</h3>
-                <p className="text-gray-600 dark:text-gray-300">We're calculating your learning style preferences</p>
-              </div>
-            </motion.div>
+            <ResultsLoadingSkeleton />
           ) : (
             <motion.div
               className="space-y-8"
@@ -188,21 +178,23 @@ const ResultsPage: React.FC = () => {
                 <ResultsChart scores={scores} />
 
                 <div className="border-t border-gray-200 dark:border-gray-700 mt-8 pt-6">
-                  <div className="flex justify-between items-center mb-4">
+                  <div className="flex flex-wrap justify-between items-center gap-4 mb-4">
                     <h4 className="font-semibold text-gray-800 dark:text-gray-100">Share Your Results</h4>
                     <div className="flex gap-2">
                       <button
                         onClick={copyToClipboard}
-                        className="flex items-center gap-2 text-violet-600 dark:text-violet-400 font-semibold hover:text-white hover:bg-violet-500 transition-all duration-200 px-4 py-2.5 rounded-2xl border-2 border-violet-200 dark:border-violet-700 hover:border-violet-500 active:scale-[0.98]"
+                        className="flex items-center gap-2 text-violet-600 dark:text-violet-400 font-semibold hover:text-white hover:bg-violet-500 transition-all duration-200 px-4 py-2.5 rounded-2xl border-2 border-violet-200 dark:border-violet-700 hover:border-violet-500 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2"
                         title="Copy to clipboard"
+                        aria-label="Copy results URL"
                       >
                         <Copy className="w-4 h-4" strokeWidth={2.5} />
                         <span className="text-sm">{copySuccess ? 'Copied!' : 'Copy'}</span>
                       </button>
                       <button
                         onClick={handleShare}
-                        className="flex items-center gap-2 text-violet-600 dark:text-violet-400 font-semibold hover:text-white hover:bg-violet-500 transition-all duration-200 px-4 py-2.5 rounded-2xl border-2 border-violet-200 dark:border-violet-700 hover:border-violet-500 active:scale-[0.98]"
+                        className="flex items-center gap-2 text-violet-600 dark:text-violet-400 font-semibold hover:text-white hover:bg-violet-500 transition-all duration-200 px-4 py-2.5 rounded-2xl border-2 border-violet-200 dark:border-violet-700 hover:border-violet-500 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2"
                         title="Share results"
+                        aria-label="Share results"
                       >
                         <Share2 className="w-4 h-4" strokeWidth={2.5} />
                         <span className="text-sm">Share</span>
@@ -210,7 +202,7 @@ const ResultsPage: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-xl overflow-x-auto whitespace-nowrap text-gray-600 dark:text-gray-300 text-sm border border-gray-100 dark:border-gray-700">
+                  <div className="bg-gray-50 dark:bg-gray-800/80 p-3 rounded-xl overflow-x-auto whitespace-nowrap text-gray-600 dark:text-gray-300 text-sm border border-gray-100 dark:border-gray-700 font-mono">
                     {resultsUrl}
                   </div>
                 </div>
@@ -221,10 +213,10 @@ const ResultsPage: React.FC = () => {
               <ResultsExplanation dominantStyles={dominantStyles} />
 
               <div className="card">
-                <div className="flex items-start justify-between gap-4 mb-4">
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-4">
                   <div className="flex items-start gap-3">
                     <div className="p-2 bg-violet-100 dark:bg-violet-900/40 rounded-xl shrink-0">
-                      <Link className="w-4 h-4 text-violet-600 dark:text-violet-400" strokeWidth={2.5} />
+                      <Link2 className="w-4 h-4 text-violet-600 dark:text-violet-400" strokeWidth={2.5} aria-hidden />
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-800 dark:text-gray-100 mb-0.5">Your results link</h3>
@@ -233,19 +225,20 @@ const ResultsPage: React.FC = () => {
                   </div>
                   <motion.button
                     onClick={copyResultsLink}
-                    className={`shrink-0 flex items-center gap-2 font-semibold text-sm px-4 py-2.5 rounded-2xl border-2 transition-all duration-200 active:scale-[0.98] ${
+                    className={`shrink-0 flex items-center justify-center gap-2 font-semibold text-sm px-4 py-2.5 rounded-2xl border-2 transition-all duration-200 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 ${
                       copyLinkSuccess
                         ? 'bg-emerald-500 border-emerald-500 text-white'
                         : 'text-violet-600 dark:text-violet-400 border-violet-200 dark:border-violet-700 hover:text-white hover:bg-violet-500 hover:border-violet-500'
                     }`}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
+                    aria-label={copyLinkSuccess ? 'Copied' : 'Copy link'}
                   >
                     <Copy className="w-4 h-4" strokeWidth={2.5} />
                     <span>{copyLinkSuccess ? 'Copied!' : 'Copy link'}</span>
                   </motion.button>
                 </div>
-                <div className="bg-gray-50 dark:bg-gray-800 px-3 py-2.5 rounded-xl border border-gray-100 dark:border-gray-700 overflow-x-auto">
+                <div className="bg-gray-50 dark:bg-gray-800/80 px-3 py-2.5 rounded-xl border border-gray-100 dark:border-gray-700 overflow-x-auto">
                   <span className="text-sm text-gray-600 dark:text-gray-300 font-mono whitespace-nowrap select-all">{resultsUrl}</span>
                 </div>
               </div>
@@ -258,6 +251,7 @@ const ResultsPage: React.FC = () => {
                     className="btn-secondary"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
+                    aria-label="Retake quiz"
                   >
                     <RotateCcw className="w-4 h-4 mr-1.5 text-gray-700 dark:text-gray-300" strokeWidth={2.5} />
                     Retake Quiz

@@ -3,20 +3,40 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --varkly-gradient-light: linear-gradient(145deg, #f5f0ff 0%, #eef6ff 30%, #ecfdf5 60%, #fefce8 85%, #fdf2f8 100%);
+    --varkly-gradient-dark: linear-gradient(145deg, #1e1b4b 0%, #1e3a5f 35%, #134e4a 65%, #451a03 100%);
+    --varkly-surface: rgba(255, 255, 255, 0.95);
+    --varkly-surface-dark: rgba(30, 27, 75, 0.95);
+  }
+
   html {
     @apply scroll-smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 
   body {
     @apply text-gray-900 font-sans antialiased;
     font-feature-settings: "ss01", "ss02", "cv01", "cv02";
-    background: linear-gradient(135deg, #f0e7ff 0%, #e0f2fe 25%, #d1fae5 50%, #fef3c7 75%, #fce7f3 100%);
+    background: var(--varkly-gradient-light);
     background-attachment: fixed;
   }
 
   .dark body {
     @apply text-gray-100;
-    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 25%, #1e3a5f 50%, #134e4a 75%, #451a03 100%);
+    background: var(--varkly-gradient-dark);
     background-attachment: fixed;
   }
 
@@ -29,7 +49,7 @@
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 px-6 py-3.5 font-semibold text-white rounded-2xl transition-all duration-200 ease-out;
     @apply bg-gradient-to-r from-violet-500 to-indigo-500 hover:from-violet-600 hover:to-indigo-600 active:scale-[0.98];
-    @apply shadow-lg shadow-violet-500/30 hover:shadow-xl hover:shadow-violet-500/40;
+    @apply shadow-lg shadow-violet-500/25 hover:shadow-xl hover:shadow-violet-500/35;
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white;
     @apply dark:from-violet-600 dark:to-indigo-600 dark:hover:from-violet-500 dark:hover:to-indigo-500 dark:shadow-violet-900/40 dark:focus-visible:ring-offset-gray-900;
   }
@@ -42,8 +62,9 @@
   }
 
   .card {
-    @apply bg-white/95 backdrop-blur rounded-2xl p-6 md:p-8 shadow-xl shadow-gray-200/50 border border-white/80;
-    @apply dark:bg-gray-800/95 dark:shadow-none dark:border-gray-700;
+    @apply rounded-2xl p-6 md:p-8 shadow-xl border backdrop-blur-xl;
+    @apply bg-white/92 shadow-gray-200/40 border-gray-100/80;
+    @apply dark:bg-gray-800/90 dark:shadow-none dark:border-gray-700/80;
   }
 
   .quiz-option {

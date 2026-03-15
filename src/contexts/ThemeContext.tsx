@@ -10,7 +10,9 @@ type ThemeContextType = {
 
 const ThemeContext = createContext<ThemeContextType | null>(null);
 
-const STORAGE_KEY = 'varkly-theme';
+import { STORAGE_KEYS } from '../constants/app';
+
+const STORAGE_KEY = STORAGE_KEYS.theme;
 
 export const useTheme = () => {
   const context = useContext(ThemeContext);

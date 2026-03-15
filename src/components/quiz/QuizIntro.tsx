@@ -2,24 +2,13 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useQuiz } from '../../contexts/QuizContext';
 import { CheckCircle } from 'lucide-react';
-import ThemeToggle from '../shared/ThemeToggle';
 
 const QuizIntro: React.FC = () => {
   const { goToNextQuestion } = useQuiz();
-  
+
   return (
-    <div className="min-h-screen">
-      <nav className="sticky top-0 z-40 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-violet-100 dark:border-gray-700 shadow-sm">
-        <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
-          <div className="flex items-center">
-            <img src="/varkly-icon.svg" alt="Varkly" className="h-8 w-8 mr-1.5" />
-            <span className="text-base font-semibold text-gray-800 dark:text-gray-100">Varkly</span>
-          </div>
-          <ThemeToggle />
-        </div>
-      </nav>
-      <div className="flex items-center justify-center p-4 min-h-[calc(100vh-3.5rem)]">
-      <motion.div 
+    <div className="flex items-center justify-center p-4 min-h-[calc(100vh-3.5rem)]">
+      <motion.div
         className="card max-w-2xl w-full"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -30,20 +19,20 @@ const QuizIntro: React.FC = () => {
         </h3>
 
         <div className="space-y-5 mb-10">
-          <div className="flex items-start">
-            <CheckCircle className="w-5 h-5 text-violet-500 mt-1 mr-3 flex-shrink-0" strokeWidth={2.5} />
+          <div className="flex items-start gap-3">
+            <CheckCircle className="w-5 h-5 text-violet-500 dark:text-violet-400 mt-1 flex-shrink-0" strokeWidth={2.5} aria-hidden />
             <p className="text-gray-600 dark:text-gray-300">Select all answers that apply to each scenario</p>
           </div>
-          <div className="flex items-start">
-            <CheckCircle className="w-5 h-5 text-violet-500 mt-1 mr-3 flex-shrink-0" strokeWidth={2.5} />
+          <div className="flex items-start gap-3">
+            <CheckCircle className="w-5 h-5 text-violet-500 dark:text-violet-400 mt-1 flex-shrink-0" strokeWidth={2.5} aria-hidden />
             <p className="text-gray-600 dark:text-gray-300">Skip questions that don't resonate with you</p>
           </div>
-          <div className="flex items-start">
-            <CheckCircle className="w-5 h-5 text-violet-500 mt-1 mr-3 flex-shrink-0" strokeWidth={2.5} />
+          <div className="flex items-start gap-3">
+            <CheckCircle className="w-5 h-5 text-violet-500 dark:text-violet-400 mt-1 flex-shrink-0" strokeWidth={2.5} aria-hidden />
             <p className="text-gray-600 dark:text-gray-300">Be honest — there are no wrong answers</p>
           </div>
-          <div className="flex items-start">
-            <CheckCircle className="w-5 h-5 text-violet-500 mt-1 mr-3 flex-shrink-0" strokeWidth={2.5} />
+          <div className="flex items-start gap-3">
+            <CheckCircle className="w-5 h-5 text-violet-500 dark:text-violet-400 mt-1 flex-shrink-0" strokeWidth={2.5} aria-hidden />
             <p className="text-gray-600 dark:text-gray-300">You'll get two AI prompts tuned to how your brain processes information</p>
           </div>
         </div>
@@ -54,17 +43,17 @@ const QuizIntro: React.FC = () => {
           </p>
           <p className="text-right text-amber-700 dark:text-amber-400 text-sm mt-2">— RayRayRay</p>
         </div>
-        
+
         <motion.button
           onClick={goToNextQuestion}
           className="btn-primary w-full md:w-auto md:mx-auto md:px-10 flex justify-center"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
+          aria-label="Start quiz"
         >
           Let's Begin!
         </motion.button>
       </motion.div>
-      </div>
     </div>
   );
 };

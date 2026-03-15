@@ -1,0 +1,18 @@
+{
+  "name": "Varkly — VARK Learning Style Quiz",
+  "short_name": "Varkly",
+  "description": "Discover your VARK learning style in 90 seconds. Get personalized AI prompts for any AI.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#faf5ff",
+  "theme_color": "#7c3aed",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/varkly-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
