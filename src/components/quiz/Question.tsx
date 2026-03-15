@@ -100,15 +100,16 @@ const Question: React.FC<QuestionProps> = ({ question }) => {
   };
 
   return (
-    <motion.div 
+    <motion.article
       className="w-full max-w-3xl mx-auto px-4"
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -20 }}
       transition={{ duration: 0.3 }}
+      aria-label={`Question ${quizState.currentQuestionIndex + 1}`}
     >
       <div className="card">
-        <motion.h3 
+        <motion.h3
           className="text-xl md:text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-6"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -133,11 +134,16 @@ const Question: React.FC<QuestionProps> = ({ question }) => {
           {question.options.map((option, index) => (
             <motion.div
               key={option.id}
+              role="button"
+              tabIndex={0}
               className={`quiz-option ${isOptionSelected(question.id, option.id) ? 'selected' : ''}`}
               onClick={() => handleOptionClick(option.id)}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleOptionClick(option.id); } }}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.2 + (index * 0.1) }}
+              aria-pressed={isOptionSelected(question.id, option.id)}
+              aria-label={`${option.text} (press ${index + 1})`}
             >
               <div className="flex items-start">
                 <div className={`w-6 h-6 mt-0.5 rounded-md border-2 flex items-center justify-center flex-shrink-0 mr-3 ${isOptionSelected(question.id, option.id) ? 'bg-violet-500 border-violet-500' : 'border-gray-300 dark:border-gray-500'}`}>
@@ -196,7 +202,7 @@ const Question: React.FC<QuestionProps> = ({ question }) => {
           </div>
         </div>
       </div>
-    </motion.div>
+    </motion.article>
   );
 };
 
