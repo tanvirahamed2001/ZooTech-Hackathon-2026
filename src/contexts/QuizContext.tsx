@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback, use
 import { useNavigate } from 'react-router-dom';
 import { QuizContextType, QuizState, VarkScores, UserIntent } from '../types';
 import { questions } from '../data/questions';
+import { stopSpeechPlayback } from '../utils/voice/web-ai-engine';
 
 const defaultQuizState: QuizState = {
   currentQuestionIndex: -1,
@@ -55,11 +56,20 @@ export const QuizProvider: React.FC<{ children: React.ReactNode }> = ({ children
     navigate('/quiz');
   }, [navigate]);
 
+  const startVoiceQuiz = useCallback(() => {
+    setQuizState(defaultQuizState);
+    navigate('/quiz/voice');
+  }, [navigate]);
+
   const resetQuiz = useCallback(() => {
     setQuizState(defaultQuizState);
     sessionStorage.removeItem('quizState');
     navigate('/');
   }, [navigate]);
+
+  const resetForVoiceIntro = useCallback(() => {
+    setQuizState(defaultQuizState);
+  }, []);
 
   const setUserIntent = useCallback((intent: UserIntent) => {
     setQuizState(prevState => ({
@@ -68,17 +78,23 @@ export const QuizProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }));
   }, []);
 
+  /** Functional update + stop TTS before results for voice quiz. */
   const goToNextQuestion = useCallback(() => {
-    setQuizState(prevState => {
+    setQuizState((prevState) => {
       if (prevState.currentQuestionIndex === -1) {
         return { ...prevState, currentQuestionIndex: 0 };
       }
       if (prevState.currentQuestionIndex < questions.length - 1) {
-        return { ...prevState, currentQuestionIndex: prevState.currentQuestionIndex + 1 };
+        return {
+          ...prevState,
+          currentQuestionIndex: prevState.currentQuestionIndex + 1,
+        };
       }
+      stopSpeechPlayback();
+      queueMicrotask(() => navigate('/results'));
       return { ...prevState, isCompleted: true };
     });
-  }, []);
+  }, [navigate]);
 
   const goToPreviousQuestion = useCallback(() => {
     setQuizState(prevState => {
@@ -87,6 +103,15 @@ export const QuizProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       return prevState;
     });
+  }, []);
+
+  const goToQuestionIndex = useCallback((index: number) => {
+    const clamped = Math.max(0, Math.min(index, questions.length - 1));
+    setQuizState(prevState => ({
+      ...prevState,
+      currentQuestionIndex: clamped,
+      isCompleted: false,
+    }));
   }, []);
 
   const selectOption = useCallback((questionId: number, optionId: string) => {
@@ -116,6 +141,16 @@ export const QuizProvider: React.FC<{ children: React.ReactNode }> = ({ children
         },
       };
     });
+  }, []);
+
+  const setQuestionAnswers = useCallback((questionId: number, optionIds: string[]) => {
+    setQuizState((prev) => ({
+      ...prev,
+      answers: {
+        ...prev.answers,
+        [questionId]: optionIds,
+      },
+    }));
   }, []);
 
   const isOptionSelected = useCallback((questionId: number, optionId: string): boolean => {
@@ -156,14 +191,18 @@ export const QuizProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const value: QuizContextType = {
     quizState,
     startQuiz,
+    startVoiceQuiz,
     goToNextQuestion,
     goToPreviousQuestion,
+    goToQuestionIndex,
     selectOption,
     unselectOption,
+    setQuestionAnswers,
     isOptionSelected,
     skipQuestion,
     calculateScores,
     resetQuiz,
+    resetForVoiceIntro,
     setUserIntent,
   };
 

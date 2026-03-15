@@ -50,8 +50,13 @@ const Question: React.FC<QuestionProps> = ({ question }) => {
         }
       }
       
+      // Enter to proceed — preventDefault + defer so selectOption from option click commits before advance
       if (key === 'enter') {
-        next();
+        e.preventDefault();
+        window.setTimeout(() => {
+          next();
+        }, 0);
+        return;
       }
       
       if (key === ' ') {
@@ -188,6 +193,7 @@ const Question: React.FC<QuestionProps> = ({ question }) => {
             </motion.button>
             
             <motion.button
+              type="button"
               onClick={goToNextQuestion}
               className={`${hasSelectedOptions ? 'btn-primary' : 'btn-secondary'} text-sm px-4 py-2`}
               initial={{ opacity: 0 }}

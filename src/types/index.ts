@@ -37,13 +37,17 @@ export type AIPrompts = {
 export type QuizContextType = {
   quizState: QuizState;
   startQuiz: () => void;
+  startVoiceQuiz: () => void;
   goToNextQuestion: () => void;
   goToPreviousQuestion: () => void;
+  goToQuestionIndex: (index: number) => void;
   selectOption: (questionId: number, optionId: string) => void;
   unselectOption: (questionId: number, optionId: string) => void;
+  setQuestionAnswers: (questionId: number, optionIds: string[]) => void;
   isOptionSelected: (questionId: number, optionId: string) => boolean;
   skipQuestion: () => void;
   calculateScores: () => VarkScores;
   resetQuiz: () => void;
+  resetForVoiceIntro: () => void;
   setUserIntent: (intent: UserIntent) => void;
 };

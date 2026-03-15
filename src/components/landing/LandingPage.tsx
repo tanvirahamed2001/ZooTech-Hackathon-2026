@@ -5,7 +5,7 @@ import { usePageMeta } from '../../hooks/usePageMeta';
 import { APP } from '../../constants/app';
 
 const LandingPage: React.FC = () => {
-  const { startQuiz } = useQuiz();
+  const { startQuiz, startVoiceQuiz } = useQuiz();
   usePageMeta('', APP.description);
 
   useEffect(() => {
@@ -77,18 +77,29 @@ const LandingPage: React.FC = () => {
             </div>
           </div>
 
-          <motion.button
-            onClick={startQuiz}
-            className="btn-primary w-full md:w-auto md:mx-auto md:px-10 flex justify-center text-lg"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => e.key === 'Enter' && startQuiz()}
-            aria-label="Start Your Free Quiz (Press Enter)"
-          >
-            Start Your Free Quiz (Press Enter)
-          </motion.button>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+            <motion.button
+              onClick={startQuiz}
+              className="btn-primary w-full md:w-auto md:mx-auto md:px-10 flex justify-center text-lg"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => e.key === 'Enter' && startQuiz()}
+              aria-label="Start Your Free Quiz (Press Enter)"
+            >
+              Start Your Free Quiz (Press Enter)
+            </motion.button>
+            <motion.button
+              onClick={startVoiceQuiz}
+              className="w-full md:w-auto px-6 py-3 rounded-xl border-2 border-violet-300 dark:border-violet-600 text-violet-700 dark:text-violet-300 font-medium hover:bg-violet-50 dark:hover:bg-violet-900/30 transition-colors"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              aria-label="Start the quiz by voice"
+            >
+              Start voice quiz
+            </motion.button>
+          </div>
         </motion.div>
 
         <motion.div

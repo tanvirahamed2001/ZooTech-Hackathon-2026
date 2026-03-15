@@ -36,7 +36,14 @@
 
       gtag('config', 'G-QCPTM267KD');
     </script>
-    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b6ee41d82cf54f4484e261c70d4e1c04"}'></script><!-- End Cloudflare Web Analytics -->
+    <!-- Cloudflare Web Analytics: only in production (CORS blocks localhost:port in dev) -->
+    <script>
+      if (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+        var s = document.createElement('script'); s.defer = true; s.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+        s.setAttribute('data-cf-beacon', '{"token": "b6ee41d82cf54f4484e261c70d4e1c04"}');
+        document.head.appendChild(s);
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
