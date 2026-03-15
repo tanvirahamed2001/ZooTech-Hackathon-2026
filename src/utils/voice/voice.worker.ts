@@ -85,6 +85,11 @@ let kokoroTts: KokoroTTSInstance | null = null;
 let kokoroLoadPromise: Promise<KokoroTTSInstance> | null = null;
 let sttPipeline: AsrPipeline | null = null;
 
+// British female default (bf_lily). Overridden by CONFIG.voice from main thread.
+const defaultTtsVoice =
+  typeof import.meta !== 'undefined' && (import.meta as unknown as { env?: { VITE_TTS_VOICE?: string } }).env?.VITE_TTS_VOICE;
+let ttsVoice: string = defaultTtsVoice && typeof defaultTtsVoice === 'string' ? defaultTtsVoice : 'bf_lily';
+
 async function getKokoroTts(): Promise<KokoroTTSInstance> {
   if (kokoroTts) {
     self.postMessage({ type: 'VOICE_FETCH_DEBUG', url: '(Kokoro cached)', rewritten: null });
@@ -129,6 +134,7 @@ self.addEventListener('message', async (event: MessageEvent) => {
     id?: number;
     text?: string;
     proxyUrl?: string;
+    voice?: string;
     audioData?: Float32Array;
   };
 
@@ -137,6 +143,7 @@ self.addEventListener('message', async (event: MessageEvent) => {
   // ── CONFIG (must run before any model load so fetches use correct base URL) ─
   if (type === 'CONFIG') {
     setRemoteHost(msg.proxyUrl);
+    if (typeof msg.voice === 'string' && msg.voice) ttsVoice = msg.voice;
     self.postMessage({ type: 'VOICE_FETCH_DEBUG', url: '(config)', rewritten: getModelBaseUrl() });
     return;
   }
@@ -157,7 +164,7 @@ self.addEventListener('message', async (event: MessageEvent) => {
   if (type === 'TTS' && typeof id === 'number' && typeof msg.text === 'string') {
     try {
       const tts = await getKokoroTts();
-      const result = await tts.generate(msg.text, { voice: 'af_heart', speed: 1 });
+      const result = await tts.generate(msg.text, { voice: ttsVoice as keyof typeof import('kokoro-js').VOICES, speed: 1 });
       if (!result.audio || result.audio.length === 0) {
         self.postMessage({ type: 'ERROR', id, error: 'No audio from TTS' });
         return;

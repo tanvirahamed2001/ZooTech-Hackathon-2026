@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { QuizContextType, QuizState, VarkScores, UserIntent } from '../types';
 import { questions } from '../data/questions';
+import { stopSpeechPlayback } from '../utils/voice/web-ai-engine';
 
 const defaultQuizState: QuizState = {
   currentQuestionIndex: -1,
@@ -81,6 +82,7 @@ export const QuizProvider: React.FC<{ children: React.ReactNode }> = ({ children
         currentQuestionIndex: prevState.currentQuestionIndex + 1,
       }));
     } else {
+      stopSpeechPlayback();
       setQuizState(prevState => ({
         ...prevState,
         isCompleted: true,

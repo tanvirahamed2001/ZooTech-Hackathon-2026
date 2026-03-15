@@ -30,8 +30,15 @@ function getProxyUrl(): string | undefined {
   return u && typeof u === 'string' ? u : undefined;
 }
 
+/** Kokoro TTS voice: British female default (bf_lily). Override with VITE_TTS_VOICE. */
+function getTtsVoice(): string {
+  const env = typeof import.meta !== 'undefined' && (import.meta as unknown as { env?: { VITE_TTS_VOICE?: string } }).env;
+  const v = env?.VITE_TTS_VOICE;
+  return v && typeof v === 'string' ? v : 'bf_lily';
+}
+
 function sendWorkerConfig(): void {
-  getWorker().postMessage({ type: 'CONFIG', proxyUrl: getProxyUrl() });
+  getWorker().postMessage({ type: 'CONFIG', proxyUrl: getProxyUrl(), voice: getTtsVoice() });
 }
 
 function getWorker(): Worker {
@@ -363,9 +370,12 @@ export async function transcribeWeb(audioBlob: Blob): Promise<string> {
     src.start(0);
     const resampled = await offlineCtx.startRendering();
     audioData = resampled.getChannelData(0);
-  } finally {
+  } catch (decodeErr) {
     await audioCtx.close();
+    const msg = decodeErr instanceof Error ? decodeErr.message : String(decodeErr);
+    throw new Error(`Unable to decode recording (${msg}). Try speaking a bit longer or use the "Stop recording" button.`);
   }
+  await audioCtx.close();
   const id = ++pendingId;
   const audioDataCopy = new Float32Array(audioData);
   return new Promise<string>((resolve, reject) => {
@@ -508,6 +518,31 @@ export function speakWithBrowserFallback(
 // ────────────────────────────────────────────────────────────────────────────
 // Public API — pregenerated (instant) and TTS (backend → worker streaming)
 // ────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Start Q1 (or any index) pregenerated WAV in the same synchronous turn as a user click.
+ * Browsers only allow audio.play() without blocking if invoked directly from the gesture; awaiting fetch breaks that.
+ */
+export function playPregeneratedQuestionFromUserGesture(questionIndex: number): void {
+  if (!Number.isInteger(questionIndex) || questionIndex < 0 || typeof window === 'undefined') return;
+  const url = `/quiz-audio/q${questionIndex}.wav`;
+  try {
+    stopSpeechPlayback();
+    const audio = new Audio(url);
+    currentPregeneratedAudio = audio;
+    const cleanup = () => {
+      if (currentPregeneratedAudio === audio) currentPregeneratedAudio = null;
+      audio.removeEventListener('ended', cleanup);
+      audio.removeEventListener('error', onErr);
+    };
+    const onErr = () => cleanup();
+    audio.addEventListener('ended', cleanup);
+    audio.addEventListener('error', onErr);
+    void audio.play().catch(onErr);
+  } catch {
+    /* no-op */
+  }
+}
 
 /**
  * Play pregenerated WAV for question index if available. Returns true if played, false otherwise.

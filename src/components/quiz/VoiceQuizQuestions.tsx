@@ -36,7 +36,7 @@ type VoiceQuizQuestionsProps = {
 };
 
 const VoiceQuizQuestions: React.FC<VoiceQuizQuestionsProps> = ({ registerClearTimeouts }) => {
-  const { quizState, goToNextQuestion, goToPreviousQuestion, goToQuestionIndex, setQuestionAnswers } = useQuiz();
+  const { quizState, goToNextQuestion, goToPreviousQuestion, setQuestionAnswers } = useQuiz();
   const [status, setStatus] = useState<VoiceStatus>('idle');
   const [thinkingPhase, setThinkingPhase] = useState<string>('');
   const [lastTranscript, setLastTranscript] = useState('');
@@ -51,7 +51,11 @@ const VoiceQuizQuestions: React.FC<VoiceQuizQuestionsProps> = ({ registerClearTi
   const nextQuestionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const recordingProcessedRef = useRef(false);
   const scheduledAdvanceForQuestionIdRef = useRef<number | null>(null);
+  const recordingStartingRef = useRef(false);
+  const recordingStartTimeRef = useRef<number>(0);
+  const MIN_RECORDING_MS = 700;
   const [scheduleAutoplay, setScheduleAutoplay] = useState(false);
+  const [micStarting, setMicStarting] = useState(false);
   const autoplayTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const speakQuestionRef = useRef<() => Promise<void>>(() => Promise.resolve());
 
@@ -147,7 +151,8 @@ const VoiceQuizQuestions: React.FC<VoiceQuizQuestionsProps> = ({ registerClearTi
     registerClearTimeouts?.(() => clearTimeoutsRef.current());
     return () => {
       registerClearTimeouts?.(() => {});
-      stopPlaybackRef.current();
+      // Do not call stopPlayback here: React StrictMode remounts this tree once on
+      // first paint, which would cancel the pregenerated audio started on "Start voice quiz".
       if (nextQuestionTimeoutRef.current) clearTimeout(nextQuestionTimeoutRef.current);
       if (autoplayTimeoutRef.current) {
         clearTimeout(autoplayTimeoutRef.current);
@@ -201,6 +206,10 @@ const VoiceQuizQuestions: React.FC<VoiceQuizQuestionsProps> = ({ registerClearTi
   }, [speakQuestion]);
 
   const startRecording = useCallback(async () => {
+    if (recordingStartingRef.current) return;
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') return;
+    recordingStartingRef.current = true;
+    setMicStarting(true);
     setError(null);
     recordingProcessedRef.current = false;
     try {
@@ -214,13 +223,19 @@ const VoiceQuizQuestions: React.FC<VoiceQuizQuestionsProps> = ({ registerClearTi
         if (e.data.size > 0) chunksRef.current.push(e.data);
       };
       mr.onstop = async () => {
+        recordingStartingRef.current = false;
+        setMicStarting(false);
         if (recordingProcessedRef.current) return;
         recordingProcessedRef.current = true;
         stream.getTracks().forEach((t) => t.stop());
         streamRef.current = null;
         mediaRecorderRef.current = null;
-        if (chunksRef.current.length === 0) {
+        const durationMs = Date.now() - recordingStartTimeRef.current;
+        if (chunksRef.current.length === 0 || durationMs < MIN_RECORDING_MS) {
           setStatus('idle');
+          if (durationMs > 0 && durationMs < MIN_RECORDING_MS) {
+            setError('Hold the button a bit longer to record (about 1 second).');
+          }
           return;
         }
         if (nextQuestionTimeoutRef.current) {
@@ -279,7 +294,8 @@ const VoiceQuizQuestions: React.FC<VoiceQuizQuestionsProps> = ({ registerClearTi
           answered = true;
         } catch (err) {
           console.error('Voice processing error:', err);
-          setError('Something went wrong. You can try again or skip.');
+          const message = err instanceof Error ? err.message : String(err);
+          setError(message.includes('decode') ? 'Recording could not be processed. Try speaking a bit longer, then release, or skip.' : 'Something went wrong. You can try again or skip.');
         } finally {
           if (!answered) setStatus('idle');
           setThinkingPhase('');
@@ -288,8 +304,12 @@ const VoiceQuizQuestions: React.FC<VoiceQuizQuestionsProps> = ({ registerClearTi
 
       startWebSpeechCapture();
       mr.start();
+      recordingStartTimeRef.current = Date.now();
+      setMicStarting(false);
       setStatus('listening');
     } catch (err) {
+      recordingStartingRef.current = false;
+      setMicStarting(false);
       console.error('Mic error:', err);
       setError('Microphone access is needed. Please allow and try again.');
       setStatus('idle');
@@ -312,6 +332,7 @@ const VoiceQuizQuestions: React.FC<VoiceQuizQuestionsProps> = ({ registerClearTi
         return;
       }
       if (e.key === ' ' || e.key === 'Spacebar') {
+        if (e.repeat) return;
         if (status === 'answered') {
           e.preventDefault();
           e.stopPropagation();
@@ -367,9 +388,56 @@ const VoiceQuizQuestions: React.FC<VoiceQuizQuestionsProps> = ({ registerClearTi
 
   const progress = ((currentIndex + 1) / questions.length) * 100;
 
+  const clearTimeouts = useCallback(() => {
+    if (autoplayTimeoutRef.current) {
+      clearTimeout(autoplayTimeoutRef.current);
+      autoplayTimeoutRef.current = null;
+    }
+    if (nextQuestionTimeoutRef.current) {
+      clearTimeout(nextQuestionTimeoutRef.current);
+      nextQuestionTimeoutRef.current = null;
+    }
+  }, []);
+  useEffect(() => {
+    registerClearTimeouts?.(clearTimeouts);
+    return () => { registerClearTimeouts?.(() => {}); };
+  }, [registerClearTimeouts, clearTimeouts]);
+
+  const handleNav = useCallback((action: () => void) => {
+    clearTimeouts();
+    clearTimeoutsRef.current();
+    stopPlayback();
+    action();
+  }, [clearTimeouts, stopPlayback]);
+
   return (
     <div className="min-h-screen">
       <div className="max-w-3xl mx-auto px-4 py-6">
+        {/* Nav first so it's always visible; sticky under any header */}
+        <nav
+          className="sticky top-14 z-30 mb-4 py-3 px-3 rounded-lg bg-violet-100 dark:bg-violet-900/60 border-2 border-violet-300 dark:border-violet-600 shadow"
+          aria-label="Previous and next question"
+        >
+          <p className="text-center text-xs font-semibold text-violet-800 dark:text-violet-200 mb-2">Step</p>
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+            <button
+              type="button"
+              onClick={() => handleNav(goToPreviousQuestion)}
+              disabled={currentIndex <= 0}
+              className="px-4 py-2 rounded-lg text-sm font-medium bg-white dark:bg-gray-800 border-2 border-violet-400 text-violet-800 dark:text-violet-200 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-violet-200 dark:hover:bg-violet-800 min-w-[100px]"
+            >
+              ← Prev
+            </button>
+            <button
+              type="button"
+              onClick={() => handleNav(goToNextQuestion)}
+              disabled={currentIndex >= questions.length - 1}
+              className="px-4 py-2 rounded-lg text-sm font-medium bg-white dark:bg-gray-800 border-2 border-violet-400 text-violet-800 dark:text-violet-200 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-violet-200 dark:hover:bg-violet-800 min-w-[100px]"
+            >
+              Next →
+            </button>
+          </div>
+        </nav>
         <div className="mb-6">
           <div className="flex justify-between items-center mb-2">
             <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -443,18 +511,37 @@ const VoiceQuizQuestions: React.FC<VoiceQuizQuestionsProps> = ({ registerClearTi
                 >
                   Stop recording
                 </motion.button>
+              ) : micStarting ? (
+                <motion.button
+                  type="button"
+                  disabled
+                  className="px-6 py-3 rounded-full font-medium text-white bg-amber-500 cursor-wait"
+                  aria-busy="true"
+                >
+                  Getting mic…
+                </motion.button>
               ) : (
                 <motion.button
                   type="button"
-                  onMouseDown={startRecording}
-                  onMouseUp={stopRecording}
-                  onMouseLeave={stopRecording}
-                  onPointerUp={stopRecording}
-                  onPointerLeave={stopRecording}
-                  onTouchStart={(e) => { e.preventDefault(); startRecording(); }}
+                  onPointerDown={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (status !== 'idle') return;
+                    startRecording();
+                  }}
+                  onPointerUp={(e) => { e.preventDefault(); stopRecording(); }}
+                  onPointerLeave={(e) => { e.preventDefault(); stopRecording(); }}
+                  onPointerCancel={(e) => { e.preventDefault(); stopRecording(); }}
+                  onTouchStart={(e) => {
+                    e.preventDefault();
+                    if (status !== 'idle') return;
+                    startRecording();
+                  }}
                   onTouchEnd={(e) => { e.preventDefault(); stopRecording(); }}
                   onTouchCancel={(e) => { e.preventDefault(); stopRecording(); }}
-                  className="px-6 py-3 rounded-full font-medium text-white bg-violet-600 hover:bg-violet-700 dark:bg-violet-500 dark:hover:bg-violet-600"
+                  onContextMenu={(e) => e.preventDefault()}
+                  className="px-6 py-3 rounded-full font-medium text-white bg-violet-600 hover:bg-violet-700 dark:bg-violet-500 dark:hover:bg-violet-600 select-none touch-none"
+                  style={{ touchAction: 'none' }}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   disabled={status === 'speaking' || status === 'thinking' || status === 'preparing' || status === 'answered'}

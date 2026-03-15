@@ -60,6 +60,9 @@ async function main() {
   env.allowRemoteModels = true;
   env.allowLocalModels = false;
 
+  const ttsVoice = process.env.VITE_TTS_VOICE || 'bf_lily';
+  console.log('TTS voice:', ttsVoice, '\n');
+
   const tts = await KokoroTTS.from_pretrained('onnx-community/Kokoro-82M-v1.0-ONNX', {
     dtype: 'q8',
     device: 'cpu',
@@ -74,7 +77,7 @@ async function main() {
   for (let i = 0; i < questions.length; i++) {
     const text = getTtsText(questions[i].scenario);
     process.stdout.write(`Question ${i + 1}/${questions.length}… `);
-    const raw = await tts.generate(text, { voice: 'af_heart', speed: 1 });
+    const raw = await tts.generate(text, { voice: ttsVoice as keyof typeof import('kokoro-js').VOICES, speed: 1 });
     const wav = raw.toWav();
     const outPath = path.join(OUT_DIR, `q${i}.wav`);
     await writeFile(outPath, Buffer.from(wav));
@@ -82,7 +85,7 @@ async function main() {
   }
 
   process.stdout.write('Confirmation got-it.wav… ');
-  const gotItRaw = await tts.generate('Got it.', { voice: 'af_heart', speed: 1 });
+  const gotItRaw = await tts.generate('Got it.', { voice: ttsVoice as keyof typeof import('kokoro-js').VOICES, speed: 1 });
   const gotItWav = gotItRaw.toWav();
   await writeFile(path.join(OUT_DIR, 'got-it.wav'), Buffer.from(gotItWav));
   console.log(path.join(OUT_DIR, 'got-it.wav'));

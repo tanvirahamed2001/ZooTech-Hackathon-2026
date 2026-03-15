@@ -22,4 +22,4 @@ Durable workspace facts and correction patterns for agents (Cursor, Cline, and o
 - App is frontend-only demo: no database, no email capture, no persistent data. Voice response mapping (VARK from transcript) uses VITE_LLM_BASE_URL (e.g. ChatJimmy proxy) or OpenRouter; no OpenAI required for TTS/STT when using local models.
 - Implementation base for team work is the teammate's fork (e.g. `aibraincoach/ZooTech-Hackathon-2026`); work on a branch of that fork and pull from fork/main as needed.
 - When working with collaborators, avoid large or breaking changes to shared code where possible; some code cannot be changed freely.
-- Voice quiz route: `/quiz/voice`. Handover and debugging notes: `docs/handover-voice-quiz-bugfixing.md` and `.cline/memory-bank/`.
+- Voice quiz route: `/quiz/voice`. Kokoro default voice **`bf_lily`** (`VITE_TTS_VOICE`). First-question audio starts on **Start voice quiz**; StrictMode must not stop that clip on remount (see `VoiceQuizQuestions` cleanup). Handover: `docs/handover-voice-quiz-bugfixing.md`. Memory bank: `.cline/memory-bank/` (often gitignored—update locally).
